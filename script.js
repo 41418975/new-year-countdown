@@ -256,10 +256,21 @@ class CountdownTimer {
 
     setupMusic() {
         this.audio = new Audio();
-        this.audio.src = 'http://music.163.com/song/media/outer/url?id=3320179802.mp3';
+        this.audio.src = 'http://music.163.com/song/media/outer/url?id=3339500515.mp3';
         this.audio.loop = true;
-        this.audio.volume = 0.3;
+        this.audio.volume = 1.0;
         this.audio.preload = 'auto';
+        
+        this.audio.addEventListener('canplaythrough', () => {
+            this.audio.play().then(() => {
+                this.isPlaying = true;
+                this.updateMusicButton();
+            }).catch(error => {
+                console.log('Auto-play prevented by browser:', error);
+                this.isPlaying = true;
+                this.updateMusicButton();
+            });
+        });
     }
 
     toggleMusic() {
