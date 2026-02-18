@@ -1,42 +1,357 @@
+/* ============================================
+   设计系统变量 - Design System Tokens
+   ============================================ */
 :root {
+    /* 主色调 */
     --primary-color: #C41E3A;
+    --primary-light: #E63950;
+    --primary-dark: #9A1830;
     --secondary-color: #FFD700;
-    --bg-gradient-start: #1a0000;
-    --bg-gradient-end: #4a0000;
-    --text-color: #ffffff;
+    --secondary-light: #FFE44D;
+    --secondary-dark: #CCB000;
+    
+    /* 背景渐变 */
+    --bg-gradient-start: #0a0000;
+    --bg-gradient-mid: #1a0000;
+    --bg-gradient-end: #3d0000;
+    
+    /* 文字颜色 */
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.85);
+    --text-muted: rgba(255, 255, 255, 0.6);
+    
+    /* 玻璃效果 */
+    --glass-bg: rgba(255, 255, 255, 0.08);
+    --glass-border: rgba(255, 255, 255, 0.15);
+    --glass-highlight: rgba(255, 255, 255, 0.25);
+    
+    /* 阴影 */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+    --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.25);
+    --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.35);
+    --shadow-glow: 0 0 40px rgba(255, 215, 0, 0.3);
+    
+    /* 动画缓动 */
+    --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --ease-elastic: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    
+    /* 间距 */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-2xl: 3rem;
+    
+    /* 圆角 */
+    --radius-sm: 0.5rem;
+    --radius-md: 1rem;
+    --radius-lg: 1.5rem;
+    --radius-xl: 2rem;
+    --radius-full: 9999px;
+    
+    /* 过渡时间 */
+    --duration-fast: 150ms;
+    --duration-normal: 300ms;
+    --duration-slow: 500ms;
+    --duration-slower: 800ms;
+}
+
+/* ============================================
+   基础样式 - Base Styles
+   ============================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: linear-gradient(
+        135deg,
+        var(--bg-gradient-start) 0%,
+        var(--bg-gradient-mid) 25%,
+        var(--bg-gradient-end) 50%,
+        var(--bg-gradient-mid) 75%,
+        var(--bg-gradient-start) 100%
+    );
     background-size: 400% 400%;
-    animation: gradientShift 15s ease infinite;
-    transition: background 0.5s ease;
+    animation: gradientShift 20s ease infinite;
+    transition: background var(--duration-slow) var(--ease-smooth);
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
+/* 背景渐变动画 */
 @keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0%, 100% { 
+        background-position: 0% 50%;
+    }
+    25% { 
+        background-position: 50% 100%;
+    }
+    50% { 
+        background-position: 100% 50%;
+    }
+    75% { 
+        background-position: 50% 0%;
+    }
 }
 
+/* ============================================
+   主题系统 - Theme System
+   ============================================ */
 .theme-blue {
     --primary-color: #1E3A8A;
+    --primary-light: #3B82F6;
+    --primary-dark: #1E40AF;
     --secondary-color: #60A5FA;
-    --bg-gradient-start: #0a1628;
+    --secondary-light: #93C5FD;
+    --secondary-dark: #3B82F6;
+    --bg-gradient-start: #030712;
+    --bg-gradient-mid: #0a1628;
     --bg-gradient-end: #1e3a5f;
+    --shadow-glow: 0 0 40px rgba(96, 165, 250, 0.3);
 }
 
 .theme-purple {
     --primary-color: #7C3AED;
-    --secondary-color: #A78BFA;
-    --bg-gradient-start: #1a0a2e;
+    --primary-light: #A78BFA;
+    --primary-dark: #6D28D9;
+    --secondary-color: #C4B5FD;
+    --secondary-light: #DDD6FE;
+    --secondary-dark: #A78BFA;
+    --bg-gradient-start: #0a0014;
+    --bg-gradient-mid: #1a0a2e;
     --bg-gradient-end: #3d1f78;
+    --shadow-glow: 0 0 40px rgba(196, 181, 253, 0.3);
 }
 
+/* ============================================
+   头部样式 - Header Styles
+   ============================================ */
+header {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.3) 0%,
+        rgba(0, 0, 0, 0) 100%
+    );
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+header h1 {
+    background: linear-gradient(
+        135deg,
+        var(--text-primary) 0%,
+        var(--secondary-color) 50%,
+        var(--text-primary) 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: textShimmer 4s linear infinite;
+    letter-spacing: 0.05em;
+}
+
+@keyframes textShimmer {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+}
+
+/* ============================================
+   音乐按钮样式 - Music Button
+   ============================================ */
+#musicToggle {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.15) 0%,
+        rgba(255, 255, 255, 0.05) 100%
+    );
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 
+        0 4px 16px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+#musicToggle::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+    );
+    transition: left var(--duration-slow) var(--ease-smooth);
+}
+
+#musicToggle:hover::before {
+    left: 100%;
+}
+
+#musicToggle:hover {
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.25) 0%,
+        rgba(255, 255, 255, 0.1) 100%
+    );
+    transform: translateY(-2px);
+    box-shadow: 
+        0 8px 24px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+#musicToggle:active {
+    transform: translateY(0) scale(0.98);
+}
+
+/* ============================================
+   主题按钮样式 - Theme Buttons
+   ============================================ */
+.theme-btn {
+    position: relative;
+    transition: all var(--duration-normal) var(--ease-elastic);
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        inset 0 2px 4px rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+}
+
+.theme-btn::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--secondary-color), transparent);
+    opacity: 0;
+    transition: opacity var(--duration-normal) var(--ease-smooth);
+    z-index: -1;
+}
+
+.theme-btn:hover {
+    transform: scale(1.15) translateY(-2px);
+    box-shadow: 
+        0 8px 20px rgba(0, 0, 0, 0.4),
+        inset 0 2px 4px rgba(255, 255, 255, 0.3);
+}
+
+.theme-btn:hover::before {
+    opacity: 0.5;
+}
+
+.theme-btn.active {
+    transform: scale(1.2);
+    box-shadow: 
+        0 0 0 3px rgba(255, 255, 255, 0.5),
+        0 0 30px rgba(255, 215, 0, 0.5),
+        inset 0 2px 4px rgba(255, 255, 255, 0.3);
+    animation: themeActive 1.5s ease-in-out infinite;
+}
+
+@keyframes themeActive {
+    0%, 100% {
+        box-shadow: 
+            0 0 0 3px rgba(255, 255, 255, 0.5),
+            0 0 30px rgba(255, 215, 0, 0.5),
+            inset 0 2px 4px rgba(255, 255, 255, 0.3);
+    }
+    50% {
+        box-shadow: 
+            0 0 0 3px rgba(255, 255, 255, 0.5),
+            0 0 50px rgba(255, 215, 0, 0.7),
+            inset 0 2px 4px rgba(255, 255, 255, 0.3);
+    }
+}
+
+/* ============================================
+   倒计时卡片样式 - Countdown Cards
+   ============================================ */
 .countdown-card {
-    animation: fadeInUp 0.6s ease-out;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    position: relative;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.12) 0%,
+        rgba(255, 255, 255, 0.05) 50%,
+        rgba(255, 255, 255, 0.08) 100%
+    );
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: var(--radius-xl);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.25),
+        0 2px 8px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    animation: cardFadeInUp 0.8s var(--ease-elastic) backwards;
+    transition: all var(--duration-normal) var(--ease-smooth);
+}
+
+/* 卡片顶部高光 */
+.countdown-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.4),
+        transparent
+    );
+}
+
+/* 卡片底部装饰线 */
+.countdown-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 2px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        var(--secondary-color),
+        transparent
+    );
+    opacity: 0;
+    transition: opacity var(--duration-normal) var(--ease-smooth);
+}
+
+.countdown-card:hover::after {
+    opacity: 1;
+}
+
+/* 卡片入场动画 */
+@keyframes cardFadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 .countdown-card:nth-child(1) { animation-delay: 0.1s; }
@@ -44,7 +359,361 @@ body {
 .countdown-card:nth-child(3) { animation-delay: 0.3s; }
 .countdown-card:nth-child(4) { animation-delay: 0.4s; }
 
-@keyframes fadeInUp {
+/* 卡片悬停效果 */
+.countdown-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.18) 0%,
+        rgba(255, 255, 255, 0.08) 50%,
+        rgba(255, 255, 255, 0.12) 100%
+    );
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 
+        0 20px 50px rgba(0, 0, 0, 0.35),
+        0 8px 16px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25),
+        var(--shadow-glow);
+}
+
+/* 卡片内部光晕 */
+.countdown-card .glow-layer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 150%;
+    height: 150%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(
+        circle,
+        rgba(255, 215, 0, 0.1) 0%,
+        transparent 70%
+    );
+    opacity: 0;
+    transition: opacity var(--duration-slow) var(--ease-smooth);
+    pointer-events: none;
+}
+
+.countdown-card:hover .glow-layer {
+    opacity: 1;
+}
+
+/* ============================================
+   数字样式 - Number Styles
+   ============================================ */
+#days, #hours, #minutes, #seconds {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-weight: 800;
+    background: linear-gradient(
+        180deg,
+        #ffffff 0%,
+        rgba(255, 255, 255, 0.9) 50%,
+        rgba(255, 255, 255, 0.7) 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+    transition: all var(--duration-normal) var(--ease-smooth);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+}
+
+/* 数字变化动画 */
+.number-change {
+    animation: numberPulse 0.4s var(--ease-elastic);
+}
+
+@keyframes numberPulse {
+    0% { 
+        transform: scale(1);
+        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+    }
+    50% { 
+        transform: scale(1.15);
+        filter: drop-shadow(0 8px 16px rgba(255, 215, 0, 0.5));
+    }
+    100% { 
+        transform: scale(1);
+        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+    }
+}
+
+/* 秒数特殊动画 */
+#seconds.number-change {
+    animation: secondsPulse 0.5s var(--ease-smooth);
+}
+
+@keyframes secondsPulse {
+    0% { 
+        transform: scale(1) rotate(0deg);
+    }
+    25% { 
+        transform: scale(1.1) rotate(-2deg);
+    }
+    50% { 
+        transform: scale(1.15) rotate(0deg);
+    }
+    75% { 
+        transform: scale(1.1) rotate(2deg);
+    }
+    100% { 
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+/* ============================================
+   庆祝容器样式 - Celebration Container
+   ============================================ */
+#celebrationContainer {
+    animation: celebrationReveal 1s var(--ease-elastic) backwards;
+}
+
+@keyframes celebrationReveal {
+    from {
+        opacity: 0;
+        transform: scale(0.8) translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+#celebrationContainer > div {
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.15) 0%,
+        rgba(255, 255, 255, 0.05) 100%
+    );
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-xl);
+    box-shadow: 
+        0 16px 48px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+#celebrationContainer > div::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        var(--secondary-color),
+        transparent
+    );
+    animation: shimmerLine 2s linear infinite;
+}
+
+@keyframes shimmerLine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* 庆祝标题 */
+#celebrationContainer h2 {
+    background: linear-gradient(
+        135deg,
+        var(--secondary-color) 0%,
+        #ffffff 50%,
+        var(--secondary-color) 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: 
+        textShimmer 2s linear infinite,
+        celebrationBounce 1s var(--ease-bounce) infinite;
+}
+
+@keyframes celebrationBounce {
+    0%, 100% { 
+        transform: translateY(0) scale(1);
+    }
+    50% { 
+        transform: translateY(-15px) scale(1.05);
+    }
+}
+
+/* ============================================
+   重置按钮样式 - Reset Button
+   ============================================ */
+#resetBtn {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.15) 0%,
+        rgba(255, 255, 255, 0.05) 100%
+    );
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-full);
+    box-shadow: 
+        0 4px 16px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+    transition: all var(--duration-normal) var(--ease-smooth);
+}
+
+#resetBtn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: radial-gradient(
+        circle,
+        rgba(255, 215, 0, 0.3) 0%,
+        transparent 70%
+    );
+    transform: translate(-50%, -50%);
+    transition: width var(--duration-slow) var(--ease-smooth),
+                height var(--duration-slow) var(--ease-smooth);
+    border-radius: 50%;
+}
+
+#resetBtn:hover {
+    transform: translateY(-3px);
+    box-shadow: 
+        0 8px 24px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+#resetBtn:hover::before {
+    width: 300%;
+    height: 300%;
+}
+
+#resetBtn:active {
+    transform: translateY(-1px) scale(0.98);
+}
+
+/* ============================================
+   页脚样式 - Footer Styles
+   ============================================ */
+footer {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    background: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.2) 0%,
+        transparent 100%
+    );
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+footer p {
+    opacity: 0.7;
+    transition: opacity var(--duration-normal) var(--ease-smooth);
+}
+
+footer:hover p {
+    opacity: 1;
+}
+
+/* ============================================
+   粒子画布样式 - Particle Canvas
+   ============================================ */
+#particleCanvas {
+    opacity: 0.8;
+}
+
+/* ============================================
+   烟花粒子样式 - Firework Particles
+   ============================================ */
+.firework-particle {
+    position: absolute;
+    border-radius: 50%;
+    animation: fireworkBurst 1.2s var(--ease-smooth) forwards;
+    pointer-events: none;
+}
+
+@keyframes fireworkBurst {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    20% {
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0;
+    }
+}
+
+/* ============================================
+   发光效果 - Glow Effects
+   ============================================ */
+.glow-effect {
+    animation: glowPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+    0%, 100% {
+        filter: drop-shadow(0 0 5px var(--secondary-color))
+                drop-shadow(0 0 10px var(--secondary-color));
+    }
+    50% {
+        filter: drop-shadow(0 0 15px var(--secondary-color))
+                drop-shadow(0 0 30px var(--secondary-color))
+                drop-shadow(0 0 45px var(--secondary-color));
+    }
+}
+
+/* ============================================
+   加载动画 - Loading Animations
+   ============================================ */
+.loading-spinner {
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    border-top: 3px solid var(--secondary-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ============================================
+   通用动画类 - Utility Animation Classes
+   ============================================ */
+.fade-in {
+    animation: fadeIn 0.6s var(--ease-smooth) backwards;
+}
+
+@keyframes fadeIn {
+    from { 
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.slide-up {
+    animation: slideUp 0.7s var(--ease-elastic) backwards;
+}
+
+@keyframes slideUp {
     from {
         opacity: 0;
         transform: translateY(30px);
@@ -55,102 +724,112 @@ body {
     }
 }
 
-.countdown-card:hover {
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-    transform: scale(1.05);
+.pulse {
+    animation: pulse 2.5s ease-in-out infinite;
 }
 
-#days, #hours, #minutes, #seconds {
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    transition: all 0.3s ease;
+@keyframes pulse {
+    0%, 100% { 
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% { 
+        transform: scale(1.03);
+        opacity: 0.9;
+    }
 }
 
-.number-change {
-    animation: numberPulse 0.3s ease-out;
+.shake {
+    animation: shake 0.6s var(--ease-smooth);
 }
 
-@keyframes numberPulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.2); }
-    100% { transform: scale(1); }
+@keyframes shake {
+    0%, 100% { transform: translateX(0) rotate(0deg); }
+    20% { transform: translateX(-8px) rotate(-2deg); }
+    40% { transform: translateX(8px) rotate(2deg); }
+    60% { transform: translateX(-6px) rotate(-1deg); }
+    80% { transform: translateX(6px) rotate(1deg); }
 }
 
-.theme-btn {
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+.float {
+    animation: float 3s ease-in-out infinite;
 }
 
-.theme-btn:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-}
-
-.theme-btn.active {
-    transform: scale(1.2);
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
-}
-
-@keyframes bounce {
+@keyframes float {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-10px); }
 }
 
-.animate-bounce {
-    animation: bounce 1s infinite;
+/* ============================================
+   滚动指示器 - Scroll Indicator
+   ============================================ */
+.scroll-indicator {
+    animation: scrollDown 2s ease-in-out infinite;
 }
 
-@keyframes shimmer {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
+@keyframes scrollDown {
+    0%, 100% { 
+        transform: translateY(0);
+        opacity: 1;
+    }
+    50% { 
+        transform: translateY(12px);
+        opacity: 0.5;
+    }
 }
 
+/* ============================================
+   庆祝文字效果 - Celebration Text
+   ============================================ */
 .celebration-text {
-    background: linear-gradient(90deg, 
-        var(--secondary-color), 
-        #ffffff, 
-        var(--secondary-color));
-    background-size: 200% auto;
+    background: linear-gradient(
+        90deg,
+        var(--secondary-color),
+        #ffffff,
+        var(--secondary-color),
+        #ffffff,
+        var(--secondary-color)
+    );
+    background-size: 300% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    animation: shimmer 3s linear infinite;
+    animation: shimmerText 3s linear infinite;
 }
 
-#celebrationContainer {
-    animation: fadeInScale 0.8s ease-out;
+@keyframes shimmerText {
+    0% { background-position: 0% center; }
+    100% { background-position: 300% center; }
 }
 
-@keyframes fadeInScale {
-    from {
-        opacity: 0;
-        transform: scale(0.8);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-#resetBtn {
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-}
-
-#resetBtn:hover {
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-    transform: scale(1.05);
-}
-
-#resetBtn:active {
-    transform: scale(0.98);
-}
-
+/* ============================================
+   响应式设计 - Responsive Design
+   ============================================ */
 @media (max-width: 640px) {
+    :root {
+        --radius-xl: 1.25rem;
+    }
+    
     .countdown-card {
-        padding: 1.5rem;
+        padding: var(--spacing-lg);
     }
     
     #days, #hours, #minutes, #seconds {
         font-size: 2.5rem;
+    }
+    
+    header h1 {
+        font-size: 1.25rem;
+    }
+    
+    .theme-btn {
+        width: 28px;
+        height: 28px;
+    }
+    
+    #musicToggle {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
     }
 }
 
@@ -158,108 +837,127 @@ body {
     #days, #hours, #minutes, #seconds {
         font-size: 3.5rem;
     }
+    
+    .countdown-card {
+        padding: var(--spacing-xl);
+    }
 }
 
 @media (min-width: 1025px) {
     #days, #hours, #minutes, #seconds {
         font-size: 4.5rem;
     }
-}
-
-@keyframes firework {
-    0% {
-        transform: scale(0);
-        opacity: 1;
-    }
-    100% {
-        transform: scale(1);
-        opacity: 0;
+    
+    .countdown-card {
+        padding: var(--spacing-2xl);
     }
 }
 
-.firework-particle {
-    position: absolute;
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    animation: firework 1s ease-out forwards;
-}
-
-.glow-effect {
-    animation: glow 2s ease-in-out infinite;
-}
-
-@keyframes glow {
-    0%, 100% {
-        filter: drop-shadow(0 0 5px var(--secondary-color));
-    }
-    50% {
-        filter: drop-shadow(0 0 20px var(--secondary-color));
+/* ============================================
+   深色模式优化 - Dark Mode Enhancements
+   ============================================ */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --glass-bg: rgba(255, 255, 255, 0.06);
+        --glass-border: rgba(255, 255, 255, 0.12);
     }
 }
 
-.scroll-indicator {
-    animation: scrollDown 2s ease-in-out infinite;
-}
-
-@keyframes scrollDown {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(10px); }
-}
-
-.loading-spinner {
-    border: 3px solid rgba(255, 255, 255, 0.3);
-    border-top: 3px solid var(--secondary-color);
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-.fade-in {
-    animation: fadeIn 0.5s ease-out;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-.slide-up {
-    animation: slideUp 0.6s ease-out;
-}
-
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
+/* ============================================
+   减少动画偏好 - Reduced Motion
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
     }
 }
 
-.pulse {
-    animation: pulse 2s ease-in-out infinite;
+/* ============================================
+   打印样式 - Print Styles
+   ============================================ */
+@media print {
+    body {
+        background: white;
+        color: black;
+    }
+    
+    .countdown-card {
+        background: white;
+        border: 1px solid #ccc;
+        box-shadow: none;
+    }
+    
+    #particleCanvas {
+        display: none;
+    }
 }
 
-@keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
+/* ============================================
+   高对比度模式 - High Contrast Mode
+   ============================================ */
+@media (prefers-contrast: high) {
+    .countdown-card {
+        border-width: 2px;
+        border-color: rgba(255, 255, 255, 0.5);
+    }
+    
+    #days, #hours, #minutes, #seconds {
+        -webkit-text-fill-color: white;
+        filter: none;
+    }
 }
 
-.shake {
-    animation: shake 0.5s ease-in-out;
+/* ============================================
+   焦点状态 - Focus States
+   ============================================ */
+button:focus-visible,
+.theme-btn:focus-visible,
+#musicToggle:focus-visible,
+#resetBtn:focus-visible {
+    outline: 2px solid var(--secondary-color);
+    outline-offset: 2px;
 }
 
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    75% { transform: translateX(5px); }
+/* ============================================
+   选择样式 - Selection Styles
+   ============================================ */
+::selection {
+    background: rgba(255, 215, 0, 0.3);
+    color: white;
+}
+
+::-moz-selection {
+    background: rgba(255, 215, 0, 0.3);
+    color: white;
+}
+
+/* ============================================
+   滚动条样式 - Scrollbar Styles
+   ============================================ */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) rgba(0, 0, 0, 0.2);
 }
