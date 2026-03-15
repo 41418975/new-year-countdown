@@ -86,6 +86,7 @@ class CountdownTimer {
         this.initEventManager();
         this.initShareManager();
         this.startFPSMonitor();
+        this.initMusicAutoplay();
     }
 
     setupPerformanceOptimizations() {
@@ -283,6 +284,53 @@ class CountdownTimer {
 
     initShareManager() {
         this.shareManager = new ShareManager(this);
+    }
+
+    initMusicAutoplay() {
+        const musicPrompt = document.getElementById('musicAutoplayPrompt');
+        const startMusicBtn = document.getElementById('startMusicBtn');
+        const skipMusicBtn = document.getElementById('skipMusicBtn');
+        const musicPlayerContent = document.getElementById('musicPlayerContent');
+        const musicPlayerArrow = document.getElementById('musicPlayerArrow');
+        
+        const hasSeenPrompt = localStorage.getItem('musicPromptShown');
+        
+        if (!hasSeenPrompt && musicPrompt) {
+            setTimeout(() => {
+                musicPrompt.classList.remove('hidden');
+            }, 1500);
+        }
+        
+        if (startMusicBtn) {
+            startMusicBtn.addEventListener('click', () => {
+                if (musicPrompt) {
+                    musicPrompt.classList.add('hidden');
+                }
+                localStorage.setItem('musicPromptShown', 'true');
+                
+                if (musicPlayerContent) {
+                    musicPlayerContent.classList.remove('hidden');
+                    musicPlayerArrow?.classList.add('expanded');
+                }
+                
+                const iframe = document.getElementById('neteaseMusicFrame');
+                if (iframe) {
+                    const currentSrc = iframe.src;
+                    if (!currentSrc.includes('auto=1')) {
+                        iframe.src = currentSrc.replace('auto=0', 'auto=1');
+                    }
+                }
+            });
+        }
+        
+        if (skipMusicBtn) {
+            skipMusicBtn.addEventListener('click', () => {
+                if (musicPrompt) {
+                    musicPrompt.classList.add('hidden');
+                }
+                localStorage.setItem('musicPromptShown', 'true');
+            });
+        }
     }
 
     loadCustomSettings() {
