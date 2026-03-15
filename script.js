@@ -1956,16 +1956,24 @@ class EventManager {
     formatEventDate(date, time) {
         const d = new Date(date);
         const year = d.getFullYear();
-        const month = d.getMonth() + 1;
-        const day = d.getDate();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
         const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
         const weekday = weekdays[d.getDay()];
         
-        let result = `${year}年${month}月${day}日 ${weekday}`;
+        let result = `${year}/${month}/${day} ${weekday}`;
         if (time) {
             result += ` ${time}`;
         }
         return result;
+    }
+
+    formatDateShort(date) {
+        const d = new Date(date);
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${year}/${month}/${day}`;
     }
 
     escapeHtml(text) {
@@ -2233,7 +2241,7 @@ class ShareManager {
         document.getElementById('shareHours').textContent = hours;
         document.getElementById('shareMinutes').textContent = minutes;
         document.getElementById('shareTargetDate').textContent = targetDate ? 
-            `目标: ${targetDate.toLocaleDateString('zh-CN')}` : '';
+            `目标: ${this.formatDateShort(targetDate)}` : '';
         
         const shareUrl = window.location.href;
         const shareUrlInput = document.getElementById('shareUrlInput');
@@ -2243,9 +2251,17 @@ class ShareManager {
         
         const shareText = document.getElementById('shareText');
         if (shareText) {
-            const text = `🎊 ${eventName}\n⏰ 距离目标还有 ${days}天 ${hours}时 ${minutes}分\n📅 ${targetDate ? targetDate.toLocaleDateString('zh-CN') : ''}\n\n来一起倒计时吧！\n${shareUrl}`;
+            const text = `🎊 ${eventName}\n⏰ 距离目标还有 ${days}天 ${hours}时 ${minutes}分\n📅 ${targetDate ? this.formatDateShort(targetDate) : ''}\n\n来一起倒计时吧！\n${shareUrl}`;
             shareText.value = text;
         }
+    }
+
+    formatDateShort(date) {
+        const d = new Date(date);
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${year}/${month}/${day}`;
     }
 
     generateQRCode() {
