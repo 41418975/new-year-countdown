@@ -315,10 +315,7 @@ class CountdownTimer {
                 
                 const iframe = document.getElementById('neteaseMusicFrame');
                 if (iframe) {
-                    const currentSrc = iframe.src;
-                    if (!currentSrc.includes('auto=1')) {
-                        iframe.src = currentSrc.replace('auto=0', 'auto=1');
-                    }
+                    iframe.src = 'https://music.163.com/outchain/player?type=0&id=17781138096&auto=1&height=430';
                 }
             });
         }
