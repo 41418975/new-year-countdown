@@ -86,7 +86,49 @@ class CountdownTimer {
         this.initEventManager();
         this.initShareManager();
         this.startFPSMonitor();
-        this.initMusicAutoplay();
+        this.initMusicPrompt();
+    }
+
+    initMusicPrompt() {
+        const musicPrompt = document.getElementById('musicPlayPrompt');
+        const startBtn = document.getElementById('startMusicPlayBtn');
+        const skipBtn = document.getElementById('skipMusicPlayBtn');
+        
+        const hasSeenPrompt = localStorage.getItem('musicPromptShown');
+        
+        if (!hasSeenPrompt && musicPrompt) {
+            setTimeout(() => {
+                musicPrompt.classList.remove('hidden');
+            }, 1000);
+        }
+        
+        if (startBtn) {
+            startBtn.addEventListener('click', () => {
+                if (musicPrompt) {
+                    musicPrompt.classList.add('hidden');
+                }
+                localStorage.setItem('musicPromptShown', 'true');
+                
+                const audio = document.getElementById('xf-musicAudio');
+                if (audio) {
+                    audio.play().catch(e => console.log('播放失败:', e));
+                }
+                
+                const playBtn = document.querySelector('.xf-playbackControl');
+                if (playBtn) {
+                    playBtn.click();
+                }
+            });
+        }
+        
+        if (skipBtn) {
+            skipBtn.addEventListener('click', () => {
+                if (musicPrompt) {
+                    musicPrompt.classList.add('hidden');
+                }
+                localStorage.setItem('musicPromptShown', 'true');
+            });
+        }
     }
 
     setupPerformanceOptimizations() {
@@ -284,50 +326,6 @@ class CountdownTimer {
 
     initShareManager() {
         this.shareManager = new ShareManager(this);
-    }
-
-    initMusicAutoplay() {
-        const musicPrompt = document.getElementById('musicAutoplayPrompt');
-        const startMusicBtn = document.getElementById('startMusicBtn');
-        const skipMusicBtn = document.getElementById('skipMusicBtn');
-        const musicPlayerContent = document.getElementById('musicPlayerContent');
-        const musicPlayerArrow = document.getElementById('musicPlayerArrow');
-        
-        const hasSeenPrompt = localStorage.getItem('musicPromptShown');
-        
-        if (!hasSeenPrompt && musicPrompt) {
-            setTimeout(() => {
-                musicPrompt.classList.remove('hidden');
-            }, 1500);
-        }
-        
-        if (startMusicBtn) {
-            startMusicBtn.addEventListener('click', () => {
-                if (musicPrompt) {
-                    musicPrompt.classList.add('hidden');
-                }
-                localStorage.setItem('musicPromptShown', 'true');
-                
-                if (musicPlayerContent) {
-                    musicPlayerContent.classList.remove('hidden');
-                    musicPlayerArrow?.classList.add('expanded');
-                }
-                
-                const iframe = document.getElementById('neteaseMusicFrame');
-                if (iframe) {
-                    iframe.src = 'https://music.163.com/outchain/player?type=0&id=17781138096&auto=1&height=430';
-                }
-            });
-        }
-        
-        if (skipMusicBtn) {
-            skipMusicBtn.addEventListener('click', () => {
-                if (musicPrompt) {
-                    musicPrompt.classList.add('hidden');
-                }
-                localStorage.setItem('musicPromptShown', 'true');
-            });
-        }
     }
 
     loadCustomSettings() {
