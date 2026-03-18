@@ -576,87 +576,110 @@
 
         <!-- 历史记录统计面板 -->
         <div id="historyPanel" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-            <div class="history-content bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 w-full mx-4 shadow-2xl flex flex-col" style="max-width: 900px; max-height: 90vh;">
-                <div class="flex justify-between items-center p-4 md:p-6 border-b border-white/10">
-                    <h3 class="text-xl font-bold text-white" data-i18n="history">📊 历史记录统计</h3>
+            <div class="history-content bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 w-full mx-2 md:mx-4 shadow-2xl flex flex-col" style="max-width: 900px; max-height: 90vh;">
+                <div class="flex justify-between items-center p-3 md:p-6 border-b border-white/10 flex-shrink-0">
+                    <h3 class="text-lg md:text-xl font-bold text-white" data-i18n="history">📊 历史记录统计</h3>
                     <button id="closeHistory" class="text-white/70 hover:text-white text-2xl transition-colors">&times;</button>
                 </div>
                 
                 <div class="flex-1 overflow-hidden flex flex-col md:flex-row">
                     <!-- 左侧统计概览 -->
-                    <div class="w-full md:w-72 p-4 md:p-6 border-b md:border-b-0 md:border-r border-white/10">
-                        <div class="grid grid-cols-2 md:grid-cols-1 gap-3">
-                            <div class="stat-card bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-xl p-4 border border-white/10">
-                                <div class="text-3xl font-bold text-white" id="totalCompletedCount">0</div>
-                                <div class="text-white/60 text-sm" data-i18n="totalCompleted">已完成事件</div>
+                    <div class="w-full md:w-72 p-3 md:p-6 border-b md:border-b-0 md:border-r border-white/10 overflow-y-auto md:overflow-visible">
+                        <!-- 统计卡片 - 移动端横向滚动 -->
+                        <div class="flex md:grid md:grid-cols-1 gap-2 md:gap-3 overflow-x-auto pb-2 md:pb-0 md:overflow-visible scrollbar-hide">
+                            <div class="stat-card flex-shrink-0 w-28 md:w-auto bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-xl p-3 md:p-4 border border-white/10">
+                                <div class="text-2xl md:text-3xl font-bold text-white" id="totalCompletedCount">0</div>
+                                <div class="text-white/60 text-xs md:text-sm" data-i18n="totalCompleted">已完成事件</div>
                             </div>
-                            <div class="stat-card bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-xl p-4 border border-white/10">
-                                <div class="text-3xl font-bold text-white" id="totalArchivedCount">0</div>
-                                <div class="text-white/60 text-sm" data-i18n="totalArchived">已归档事件</div>
+                            <div class="stat-card flex-shrink-0 w-28 md:w-auto bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-xl p-3 md:p-4 border border-white/10">
+                                <div class="text-2xl md:text-3xl font-bold text-white" id="totalArchivedCount">0</div>
+                                <div class="text-white/60 text-xs md:text-sm" data-i18n="totalArchived">已归档事件</div>
                             </div>
-                            <div class="stat-card bg-gradient-to-br from-red-500/20 to-rose-500/20 rounded-xl p-4 border border-white/10">
-                                <div class="text-3xl font-bold text-white" id="totalDeletedCount">0</div>
-                                <div class="text-white/60 text-sm" data-i18n="totalDeleted">已删除事件</div>
+                            <div class="stat-card flex-shrink-0 w-28 md:w-auto bg-gradient-to-br from-red-500/20 to-rose-500/20 rounded-xl p-3 md:p-4 border border-white/10">
+                                <div class="text-2xl md:text-3xl font-bold text-white" id="totalDeletedCount">0</div>
+                                <div class="text-white/60 text-xs md:text-sm" data-i18n="totalDeleted">已删除事件</div>
                             </div>
-                            <div class="stat-card bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-xl p-4 border border-white/10">
-                                <div class="text-3xl font-bold text-white" id="totalDaysCount">0</div>
-                                <div class="text-white/60 text-sm" data-i18n="totalDays">累计倒计时天数</div>
+                            <div class="stat-card flex-shrink-0 w-28 md:w-auto bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-xl p-3 md:p-4 border border-white/10">
+                                <div class="text-2xl md:text-3xl font-bold text-white" id="totalDaysCount">0</div>
+                                <div class="text-white/60 text-xs md:text-sm" data-i18n="totalDays">累计倒计时天数</div>
                             </div>
-                            <div class="stat-card bg-gradient-to-br from-yellow-500/20 to-orange-500/20 rounded-xl p-4 border border-white/10">
-                                <div class="text-3xl font-bold text-white" id="currentStreak">0</div>
-                                <div class="text-white/60 text-sm" data-i18n="streakDays">连续完成天数</div>
-                            </div>
-                        </div>
-                        
-                        <!-- 年度统计 -->
-                        <div class="mt-4 bg-white/5 rounded-xl p-4 border border-white/10">
-                            <h4 class="text-white font-semibold mb-3" data-i18n="yearStats">📅 年度统计</h4>
-                            <div class="space-y-2">
-                                <div class="flex justify-between text-sm">
-                                    <span class="text-white/60" data-i18n="yearCompleted">今年完成</span>
-                                    <span class="text-white font-semibold" id="yearCompletedCount">0</span>
-                                </div>
-                                <div class="flex justify-between text-sm">
-                                    <span class="text-white/60" data-i18n="yearCreated">今年创建</span>
-                                    <span class="text-white font-semibold" id="yearCreatedCount">0</span>
-                                </div>
-                                <div class="flex justify-between text-sm">
-                                    <span class="text-white/60" data-i18n="completionRate">完成率</span>
-                                    <span class="text-white font-semibold" id="yearCompletionRate">0%</span>
-                                </div>
+                            <div class="stat-card flex-shrink-0 w-28 md:w-auto bg-gradient-to-br from-yellow-500/20 to-orange-500/20 rounded-xl p-3 md:p-4 border border-white/10">
+                                <div class="text-2xl md:text-3xl font-bold text-white" id="currentStreak">0</div>
+                                <div class="text-white/60 text-xs md:text-sm" data-i18n="streakDays">连续完成天数</div>
                             </div>
                         </div>
                         
-                        <!-- 分类统计 -->
-                        <div class="mt-4 bg-white/5 rounded-xl p-4 border border-white/10">
-                            <h4 class="text-white font-semibold mb-3" data-i18n="categoryStats">📁 分类统计</h4>
-                            <div id="categoryStats" class="space-y-2">
+                        <!-- 年度统计 & 分类统计 - 移动端隐藏，显示在时间线上方 -->
+                        <div class="hidden md:block">
+                            <div class="mt-4 bg-white/5 rounded-xl p-4 border border-white/10">
+                                <h4 class="text-white font-semibold mb-3" data-i18n="yearStats">📅 年度统计</h4>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between text-sm">
+                                        <span class="text-white/60" data-i18n="yearCompleted">今年完成</span>
+                                        <span class="text-white font-semibold" id="yearCompletedCount">0</span>
+                                    </div>
+                                    <div class="flex justify-between text-sm">
+                                        <span class="text-white/60" data-i18n="yearCreated">今年创建</span>
+                                        <span class="text-white font-semibold" id="yearCreatedCount">0</span>
+                                    </div>
+                                    <div class="flex justify-between text-sm">
+                                        <span class="text-white/60" data-i18n="completionRate">完成率</span>
+                                        <span class="text-white font-semibold" id="yearCompletionRate">0%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4 bg-white/5 rounded-xl p-4 border border-white/10">
+                                <h4 class="text-white font-semibold mb-3" data-i18n="categoryStats">📁 分类统计</h4>
+                                <div id="categoryStats" class="space-y-2">
+                                </div>
                             </div>
                         </div>
                     </div>
                     
                     <!-- 右侧时间线 -->
-                    <div class="flex-1 p-4 md:p-6 overflow-y-auto">
-                        <div class="flex justify-between items-center mb-4">
-                            <h4 class="text-lg font-semibold text-white" data-i18n="timeline">⏳ 历史时间线</h4>
-                            <div class="flex gap-2">
-                                <select id="historyFilterType" class="bg-white/10 border border-white/20 rounded-lg px-3 py-1.5 text-white text-sm focus:outline-none focus:border-white/40">
+                    <div class="flex-1 p-3 md:p-6 overflow-y-auto">
+                        <!-- 移动端显示年度统计和分类统计 -->
+                        <div class="md:hidden mb-4 space-y-3">
+                            <div class="bg-white/5 rounded-xl p-3 border border-white/10">
+                                <h4 class="text-white font-semibold mb-2 text-sm" data-i18n="yearStats">📅 年度统计</h4>
+                                <div class="grid grid-cols-3 gap-2 text-center">
+                                    <div>
+                                        <div class="text-white font-bold text-lg" id="yearCompletedCountMobile">0</div>
+                                        <div class="text-white/50 text-xs" data-i18n="yearCompleted">今年完成</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-white font-bold text-lg" id="yearCreatedCountMobile">0</div>
+                                        <div class="text-white/50 text-xs" data-i18n="yearCreated">今年创建</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-white font-bold text-lg" id="yearCompletionRateMobile">0%</div>
+                                        <div class="text-white/50 text-xs" data-i18n="completionRate">完成率</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4">
+                            <h4 class="text-base md:text-lg font-semibold text-white" data-i18n="timeline">⏳ 历史时间线</h4>
+                            <div class="flex gap-2 w-full sm:w-auto">
+                                <select id="historyFilterType" class="flex-1 sm:flex-none bg-white/10 border border-white/20 rounded-lg px-2 md:px-3 py-1.5 text-white text-xs md:text-sm focus:outline-none focus:border-white/40">
                                     <option value="all" data-i18n="allTypes">全部类型</option>
                                     <option value="completed" data-i18n="completed">已完成</option>
                                     <option value="archived" data-i18n="archived">已归档</option>
                                     <option value="deleted" data-i18n="deleted">已删除</option>
                                 </select>
-                                <select id="historyFilterYear" class="bg-white/10 border border-white/20 rounded-lg px-3 py-1.5 text-white text-sm focus:outline-none focus:border-white/40">
+                                <select id="historyFilterYear" class="flex-1 sm:flex-none bg-white/10 border border-white/20 rounded-lg px-2 md:px-3 py-1.5 text-white text-xs md:text-sm focus:outline-none focus:border-white/40">
                                     <option value="all" data-i18n="allYears">全部年份</option>
                                 </select>
                             </div>
                         </div>
                         
-                        <div id="historyTimeline" class="space-y-4">
-                            <div class="empty-history text-center py-12 text-white/50">
-                                <div class="text-5xl mb-4">📭</div>
-                                <p>暂无历史记录</p>
-                                <p class="text-sm mt-2">完成事件后将自动记录在这里</p>
+                        <div id="historyTimeline" class="space-y-3 md:space-y-4">
+                            <div class="empty-history text-center py-8 md:py-12 text-white/50">
+                                <div class="text-4xl md:text-5xl mb-3 md:mb-4">📭</div>
+                                <p class="text-sm md:text-base">暂无历史记录</p>
+                                <p class="text-xs md:text-sm mt-2">完成事件后将自动记录在这里</p>
                             </div>
                         </div>
                     </div>

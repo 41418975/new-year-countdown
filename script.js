@@ -2807,10 +2807,16 @@ class HistoryManager {
         ).length;
         document.getElementById('yearCompletedCount').textContent = yearCompleted;
 
+        const yearCompletedMobile = document.getElementById('yearCompletedCountMobile');
+        if (yearCompletedMobile) yearCompletedMobile.textContent = yearCompleted;
+
         const yearCreated = this.history.filter(e => 
             new Date(e.completedAt) >= startOfYear
         ).length;
         document.getElementById('yearCreatedCount').textContent = yearCreated;
+
+        const yearCreatedMobile = document.getElementById('yearCreatedCountMobile');
+        if (yearCreatedMobile) yearCreatedMobile.textContent = yearCreated;
 
         const allYearEntries = this.history.filter(e => 
             new Date(e.completedAt) >= startOfYear
@@ -2819,6 +2825,9 @@ class HistoryManager {
             ? Math.round((yearCompleted / allYearEntries.length) * 100) 
             : 0;
         document.getElementById('yearCompletionRate').textContent = `${completionRate}%`;
+
+        const yearCompletionRateMobile = document.getElementById('yearCompletionRateMobile');
+        if (yearCompletionRateMobile) yearCompletionRateMobile.textContent = `${completionRate}%`;
 
         this.updateCategoryStats();
     }

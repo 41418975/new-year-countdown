@@ -3345,6 +3345,16 @@ input[type="time"]::-webkit-datetime-edit-minute-field:focus {
     background-clip: text;
 }
 
+/* 隐藏滚动条 */
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
 /* 时间线样式 */
 .timeline-group {
     animation: fadeInTimeline 0.4s ease-out;
