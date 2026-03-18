@@ -42,13 +42,10 @@
 - **时间线** - 历史事件时间线展示
 
 ### 📤 分享功能
-- **社交平台** - 微信、微博、QQ、QQ空间
 - **链接分享** - 一键复制分享链接
-- **文案分享** - 自动生成分享文案
 
 ### 🎵 音乐播放
 - **背景音乐** - xf-MusicPlayer 音乐播放器
-- **网易云歌单** - 支持网易云音乐歌单
 - **自动播放提示** - 解决浏览器自动播放限制
 
 ### 🎆 视觉效果
@@ -89,42 +86,6 @@ countdown/
 ├── wrangler.toml       # Cloudflare Workers 配置
 └── wrangler.jsonc      # Cloudflare Workers 配置
 ```
-
-## 🚀 部署方式
-
-### 方法一：本地运行
-
-```bash
-# 使用 Python
-python -m http.server 8000
-
-# 使用 Node.js
-npx http-server -p 8000
-
-# 使用 PHP
-php -S localhost:8000
-```
-
-访问 `http://localhost:8000`
-
-### 方法二：Cloudflare Pages
-
-1. 连接 GitHub 仓库到 Cloudflare Pages
-2. 构建命令留空（静态网站）
-3. 输出目录设置为 `/`
-4. 部署完成
-
-### 方法三：GitHub Pages
-
-1. 进入仓库 Settings > Pages
-2. 选择 main 分支
-3. 保存后自动部署
-
-### 方法四：Vercel / Netlify
-
-1. 导入 GitHub 仓库
-2. 无需构建配置
-3. 一键部署
 
 ## 🎨 主题预览
 
@@ -214,7 +175,7 @@ this.currentLanguage = 'zh-CN'; // 默认语言
 
 ## 👨‍💻 作者
 
-**晚梦** - 晚梦出品必属精品
+**晚梦亦清歌** 
 
 ---
 
