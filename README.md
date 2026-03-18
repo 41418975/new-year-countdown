@@ -1,252 +1,220 @@
-# 跨年倒计时网站
+# 🎊 跨年倒计时网站
 
-一个功能完整、视觉吸引力强的跨年倒计时网站，实时显示距离新年的剩余时间，并在倒计时结束时展示庆祝动画和新年祝福。
+一个功能丰富、视觉精美的倒计时网站，支持自定义事件、多主题切换、多语言支持、音乐播放等功能。
 
-在线网站：https://wmyqg.dpdns.org/
+![预览图](preview.png)
 
-## 功能特性
+## ✨ 功能特性
 
-### 核心功能
-- **精确倒计时**：实时显示距离新年的天、时、分、秒
-- **自动更新**：每秒自动刷新倒计时显示
-- **跨年检测**：自动识别并计算到明年1月1日的时间
+### 🕐 核心倒计时
+- **精确倒计时** - 实时显示天、时、分、秒
+- **自动更新** - 每秒自动刷新倒计时
+- **年度进度** - 显示当前年份进度百分比
+- **自定义事件** - 支持创建任意事件的倒计时
 
-### 视觉设计
-- **节日配色**：提供红色、蓝色、紫色三种主题
-- **动态背景**：渐变动画背景效果
-- **粒子动画**：Canvas实现的星星闪烁效果
-- **烟花特效**：倒计时结束时的庆祝烟花动画
-- **玻璃拟态**：现代化的毛玻璃UI设计
+### 🎨 主题系统
+- **精选主题** - 庆典、霓虹、奢华、星空、柔和
+- **经典主题** - 红色、蓝色、紫色、金色、绿色、黑色
+- **字体调节** - 支持调整字体大小 (80%-120%)
+- **主题预览** - 实时预览主题效果
+- **持久化存储** - 自动保存用户偏好设置
 
-### 交互体验
-- **平滑过渡**：数字切换时的脉冲动画
-- **悬停效果**：卡片悬停时的缩放效果
-- **主题切换**：一键切换不同的节日主题
-- **响应式设计**：完美适配桌面、平板和移动设备
+### 🌍 多语言支持
+- 🇨🇳 简体中文
+- 🇺🇸 English
+- 🇯🇵 日本語
+- 🇰🇷 한국어
 
-### 可定制化
-- **主题持久化**：用户选择的主题会保存到本地存储
-- **重新开始**：倒计时结束后可重新开始
+### 📅 事件管理
+- **事件创建** - 添加自定义倒计时事件
+- **分类管理** - 工作、个人、学习、健康、社交、生日、其他
+- **优先级设置** - 高、中、低三级优先级
+- **标签系统** - 支持添加多个标签
+- **提醒功能** - 事件提醒通知
+- **状态管理** - 进行中、已完成、已归档
+- **搜索筛选** - 按名称、类别、优先级、状态筛选
 
-## 技术栈
+### 📊 历史统计
+- **完成统计** - 已完成/已归档/已删除事件数量
+- **年度统计** - 今年完成数、创建数、完成率
+- **分类统计** - 各类别事件分布
+- **连续天数** - 连续完成事件天数
+- **时间线** - 历史事件时间线展示
 
-- **HTML5**：语义化标签构建页面结构
-- **Tailwind CSS v3**：响应式布局和样式设计
-- **CSS3**：自定义动画和过渡效果
-- **JavaScript (ES6+)**：倒计时逻辑和交互效果
-- **Canvas API**：粒子系统和烟花动画
+### 📤 分享功能
+- **社交平台** - 微信、微博、QQ、QQ空间
+- **链接分享** - 一键复制分享链接
+- **文案分享** - 自动生成分享文案
 
-## 文件结构
+### 🎵 音乐播放
+- **背景音乐** - xf-MusicPlayer 音乐播放器
+- **网易云歌单** - 支持网易云音乐歌单
+- **自动播放提示** - 解决浏览器自动播放限制
+
+### 🎆 视觉效果
+- **粒子动画** - Canvas 实现的动态粒子背景
+- **烟花特效** - 倒计时结束时的庆祝烟花
+- **玻璃拟态** - 现代化毛玻璃 UI 设计
+- **平滑动画** - 数字切换脉冲动画
+- **悬停效果** - 卡片悬停缩放效果
+
+### ⌨️ 快捷键支持
+| 快捷键 | 功能 |
+|--------|------|
+| M | 音乐控制 |
+| S | 打开设置 |
+| E | 事件管理 |
+| P | 分享面板 |
+| H | 历史统计 |
+
+## 🛠️ 技术栈
+
+- **HTML5** - 语义化标签
+- **Tailwind CSS v3** - 响应式布局
+- **CSS3** - 自定义动画和过渡
+- **JavaScript (ES6+)** - 核心逻辑
+- **Canvas API** - 粒子系统和烟花
+- **LocalStorage** - 数据持久化
+
+## 📁 文件结构
 
 ```
-cross-year-countdown/
+countdown/
 ├── index.html          # 主页面
-├── style.css           # 自定义样式和动画
-├── script.js           # 倒计时逻辑和交互效果
-└── README.md           # 部署说明文档
+├── style.css           # 样式文件
+├── script.js           # 核心逻辑
+├── i18n.js             # 国际化配置
+├── README.md           # 说明文档
+├── _headers            # Cloudflare Headers 配置
+├── wrangler.toml       # Cloudflare Workers 配置
+└── wrangler.jsonc      # Cloudflare Workers 配置
 ```
 
-## 部署说明
+## 🚀 部署方式
 
-### 方法一：本地直接打开
+### 方法一：本地运行
 
-1. 下载所有文件到本地目录
-2. 双击 `index.html` 文件在浏览器中打开
-3. 即可查看倒计时效果
-
-### 方法二：使用本地服务器
-
-#### 使用 Python
 ```bash
-# Python 3
+# 使用 Python
 python -m http.server 8000
 
-# Python 2
-python -m SimpleHTTPServer 8000
-```
+# 使用 Node.js
+npx http-server -p 8000
 
-#### 使用 Node.js (http-server)
-```bash
-# 安装 http-server
-npm install -g http-server
-
-# 启动服务器
-http-server -p 8000
-```
-
-#### 使用 PHP
-```bash
+# 使用 PHP
 php -S localhost:8000
 ```
 
-然后在浏览器中访问 `http://localhost:8000`
+访问 `http://localhost:8000`
 
-### 方法三：部署到静态网站托管平台
+### 方法二：Cloudflare Pages
 
-#### GitHub Pages
-1. 创建 GitHub 仓库
-2. 上传所有文件到仓库
-3. 进入仓库 Settings > Pages
-4. 选择 main 分支作为源
-5. 保存后即可通过 GitHub Pages 访问
-
-#### Netlify
-1. 注册 Netlify 账号
-2. 将文件拖拽到 Netlify 部署页面
-3. 或连接 GitHub 仓库自动部署
-4. 部署完成后获得网站 URL
-
-#### Vercel
-1. 注册 Vercel 账号
-2. 导入 GitHub 仓库
-3. 配置构建设置（静态网站无需配置）
+1. 连接 GitHub 仓库到 Cloudflare Pages
+2. 构建命令留空（静态网站）
+3. 输出目录设置为 `/`
 4. 部署完成
 
-### 方法四：部署到云服务器
+### 方法三：GitHub Pages
 
-#### 使用 Nginx
-1. 将文件上传到服务器（如 `/var/www/countdown`）
-2. 配置 Nginx：
-```nginx
-server {
-    listen 80;
-    server_name your-domain.com;
-    
-    root /var/www/countdown;
-    index index.html;
-    
-    location / {
-        try_files $uri $uri/ =404;
-    }
-}
-```
-3. 重启 Nginx：`sudo systemctl restart nginx`
+1. 进入仓库 Settings > Pages
+2. 选择 main 分支
+3. 保存后自动部署
 
-#### 使用 Apache
-1. 将文件上传到服务器（如 `/var/www/html/countdown`）
-2. 配置虚拟主机
-3. 重启 Apache：`sudo systemctl restart apache2`
+### 方法四：Vercel / Netlify
 
-## 浏览器兼容性
+1. 导入 GitHub 仓库
+2. 无需构建配置
+3. 一键部署
 
-- Chrome 90+
-- Firefox 88+
-- Safari 14+
-- Edge 90+
-- Opera 76+
+## 🎨 主题预览
 
-## 性能优化
+| 主题 | 描述 |
+|------|------|
+| 🎉 庆典 | 节日庆典风格，活力四射 |
+| 🌃 霓虹 | 深夜霓虹风格，OLED优化 |
+| 💎 奢华 | 奢华金夜风格，高端大气 |
+| 🚀 星空 | 星空科技风格，宇宙背景 |
+| 🌸 柔和 | 温馨柔和风格，家庭友好 |
 
-- 使用 `requestAnimationFrame` 优化动画性能
-- Canvas 粒子系统自动清理过期粒子
-- CSS 动画使用 transform 和 opacity 属性
-- 懒加载非关键资源
-- 最小化重排和重绘
+## 📱 响应式设计
 
-## 自定义配置
+- ✅ 桌面端 (1920px+)
+- ✅ 笔记本 (1366px)
+- ✅ 平板 (768px)
+- ✅ 手机 (375px)
 
-### 修改主题颜色
+## 🔧 自定义配置
 
-在 `style.css` 中修改 CSS 变量：
+### 修改音乐播放器
 
-```css
-:root {
-    --primary-color: #C41E3A;      /* 主色调 */
-    --secondary-color: #FFD700;    /* 辅助色 */
-    --bg-gradient-start: #1a0000;  /* 背景渐变起始色 */
-    --bg-gradient-end: #4a0000;     /* 背景渐变结束色 */
-}
+在 `index.html` 中修改歌单 ID：
+
+```html
+<div id="xf-MusicPlayer" 
+     data-cdnName="https://player.xfyun.club/js" 
+     data-songList="你的歌单ID" 
+     data-fadeOutAutoplay>
+</div>
 ```
 
 ### 添加新主题
 
-1. 在 `style.css` 中添加新的主题类：
+在 `style.css` 中添加：
+
 ```css
-.theme-green {
-    --primary-color: #10B981;
-    --secondary-color: #34D399;
-    --bg-gradient-start: #064e3b;
-    --bg-gradient-end: #065f46;
+.theme-custom {
+    --primary-color: #your-color;
+    --secondary-color: #your-color;
+    --bg-gradient-start: #your-color;
+    --bg-gradient-end: #your-color;
 }
 ```
 
-2. 在 `index.html` 中添加主题按钮：
-```html
-<button class="theme-btn w-8 h-8 rounded-full bg-green-600 border-2 border-white" data-theme="green"></button>
-```
+### 修改默认语言
 
-### 调整倒计时目标
-
-在 `script.js` 的 `getNextNewYear()` 方法中修改目标日期：
+在 `i18n.js` 中修改：
 
 ```javascript
-getNextNewYear() {
-    const now = new Date();
-    const currentYear = now.getFullYear();
-    const nextYear = currentYear + 1;
-    return new Date(`January 1, ${nextYear} 00:00:00`);
-}
+this.currentLanguage = 'zh-CN'; // 默认语言
 ```
 
-### 修改粒子效果
+## 🌐 浏览器兼容性
 
-在 `script.js` 的 `createParticles()` 方法中调整粒子数量和属性：
+| 浏览器 | 版本 |
+|--------|------|
+| Chrome | 90+ |
+| Firefox | 88+ |
+| Safari | 14+ |
+| Edge | 90+ |
+| Opera | 76+ |
 
-```javascript
-createParticles() {
-    const particleCount = 100;  // 调整粒子数量
-    
-    for (let i = 0; i < particleCount; i++) {
-        this.particles.push({
-            x: Math.random() * this.canvas.width,
-            y: Math.random() * this.canvas.height,
-            size: Math.random() * 3 + 1,      // 调整粒子大小
-            speedX: (Math.random() - 0.5) * 0.5,
-            speedY: (Math.random() - 0.5) * 0.5,
-            opacity: Math.random() * 0.5 + 0.2,
-            twinkleSpeed: Math.random() * 0.02 + 0.01,
-            twinkleDirection: 1
-        });
-    }
-}
-```
+## 📊 性能优化
 
-## 常见问题
+- `requestAnimationFrame` 优化动画
+- Canvas 粒子对象池复用
+- CSS 动画使用 transform/opacity
+- 离屏 Canvas 渲染优化
+- 自适应质量调节
 
-### Q: 倒计时不准确怎么办？
-A: 确保您的设备时间设置正确，网站使用的是本地系统时间。
+## 📝 更新日志
 
-### Q: 在移动设备上显示异常？
-A: 网站已针对移动设备优化，建议使用最新版本的移动浏览器。
+### v2.0.0
+- ✨ 新增事件管理系统
+- ✨ 新增历史统计功能
+- ✨ 新增分享功能
+- ✨ 新增多语言支持 (中/英/日/韩)
+- ✨ 新增音乐播放器
+- 🎨 优化主题系统
+- 🎨 优化粒子动画效果
+- 🐛 修复已知问题
 
-### Q: 如何添加音效？
-A: 可以在 `script.js` 的 `handleCountdownComplete()` 方法中添加音频播放代码。
+## 📄 许可证
 
-### Q: 如何修改新年祝福语？
-A: 在 `index.html` 的 `celebrationContainer` 部分修改祝福文本。
+本项目可自由使用和修改。
 
-## 维护和扩展
+## 👨‍💻 作者
 
-### 代码结构
-- HTML：页面结构和语义化标签
-- CSS：样式、动画和响应式布局
-- JavaScript：倒计时逻辑、粒子系统和交互功能
-
-### 添加新功能建议
-- 添加倒计时提醒功能
-- 支持自定义目标日期
-- 添加分享功能
-- 集成社交媒体
-- 添加多语言支持
-- 实现用户个性化设置
-
-## 许可证
-
-本项目可自由使用和修改，用于个人或商业项目。
-
-## 联系方式
-
-如有问题或建议，欢迎反馈。
+**晚梦** - 晚梦出品必属精品
 
 ---
 

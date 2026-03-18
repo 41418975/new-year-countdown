@@ -3254,3 +3254,274 @@ input[type="time"]::-webkit-datetime-edit-minute-field:focus {
         display: none;
     }
 }
+
+/* ============================================
+   历史记录统计面板样式
+   ============================================ */
+
+/* 历史面板内容 */
+.history-content {
+    animation: slideInUp 0.3s ease-out;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 统计卡片 */
+.stat-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(124, 58, 237, 0.2);
+}
+
+.stat-card .text-3xl {
+    background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.8) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* 时间线样式 */
+.timeline-group {
+    animation: fadeInTimeline 0.4s ease-out;
+}
+
+@keyframes fadeInTimeline {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.timeline-date {
+    position: relative;
+}
+
+.timeline-date span:first-child {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.7;
+        transform: scale(1.1);
+    }
+}
+
+.timeline-entries {
+    position: relative;
+}
+
+.timeline-entries::before {
+    content: '';
+    position: absolute;
+    left: -2px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, 
+        rgba(124, 58, 237, 0.5) 0%, 
+        rgba(236, 72, 153, 0.5) 50%,
+        rgba(124, 58, 237, 0.3) 100%
+    );
+}
+
+/* 时间线条目 */
+.timeline-entry {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.timeline-entry::before {
+    content: '';
+    position: absolute;
+    left: -21px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #7C3AED, #EC4899);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 10px rgba(124, 58, 237, 0.5);
+}
+
+.timeline-entry:hover {
+    transform: translateX(5px);
+    border-color: rgba(124, 58, 237, 0.3);
+    box-shadow: 0 4px 20px rgba(124, 58, 237, 0.15);
+}
+
+/* 空历史状态 */
+.empty-history {
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* 分类统计进度条动画 */
+.stat-card .h-full {
+    animation: progressGrow 1s ease-out;
+}
+
+@keyframes progressGrow {
+    from {
+        width: 0 !important;
+    }
+}
+
+/* 历史面板响应式 */
+@media (max-width: 768px) {
+    .history-content {
+        max-height: 85vh;
+    }
+    
+    .stat-card {
+        padding: 12px;
+    }
+    
+    .stat-card .text-3xl {
+        font-size: 1.5rem;
+    }
+    
+    .timeline-entry {
+        padding: 10px;
+    }
+    
+    .timeline-entry::before {
+        left: -17px;
+        width: 8px;
+        height: 8px;
+    }
+}
+
+/* 滚动条美化 */
+#historyTimeline::-webkit-scrollbar {
+    width: 6px;
+}
+
+#historyTimeline::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
+}
+
+#historyTimeline::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #7C3AED, #EC4899);
+    border-radius: 3px;
+}
+
+#historyTimeline::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #8B5CF6, #F472B6);
+}
+
+/* 删除状态特殊样式 */
+.timeline-entry[data-status="deleted"] {
+    opacity: 0.7;
+    border-left: 3px solid rgba(239, 68, 68, 0.5);
+}
+
+.timeline-entry[data-status="deleted"] .timeline-entry-title {
+    text-decoration: line-through;
+    text-decoration-color: rgba(239, 68, 68, 0.5);
+}
+
+.timeline-entry[data-status="deleted"]::before {
+    background: linear-gradient(135deg, #EF4444, #F87171);
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+}
+
+/* 删除记录卡片样式 */
+.stat-card:has(#totalDeletedCount) {
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card:has(#totalDeletedCount)::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(135deg, transparent 0%, rgba(239, 68, 68, 0.1) 100%);
+    pointer-events: none;
+}
+
+/* 语言切换下拉菜单样式 */
+#languageDropdown {
+    animation: fadeInDropdown 0.2s ease-out;
+}
+
+@keyframes fadeInDropdown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.lang-option {
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.lang-option:hover {
+    background: rgba(124, 58, 237, 0.2) !important;
+}
+
+.lang-option.active {
+    background: rgba(124, 58, 237, 0.3);
+}
+
+.lang-option.current::before {
+    content: '✓';
+    position: absolute;
+    left: 8px;
+    color: #10B981;
+}
+
+[dir="rtl"] #languageDropdown {
+    right: auto;
+    left: 0;
+}
+
+[dir="rtl"] .lang-option {
+    text-align: right;
+}
+
+/* 移动端语言切换适配 */
+@media (max-width: 640px) {
+    #languageDropdown {
+        right: -50px;
+        min-width: 120px;
+    }
+}

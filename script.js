@@ -80,11 +80,11 @@ class CountdownTimer {
         this.loadThemeSettingsOnStart();
         this.startCountdown();
         this.updateTargetYear();
-        this.updateCurrentYear();
         this.updateYearProgress();
         this.startParticleSystem();
         this.initEventManager();
         this.initShareManager();
+        this.initHistoryManager();
         this.startFPSMonitor();
         this.initMusicPrompt();
     }
@@ -328,6 +328,10 @@ class CountdownTimer {
         this.shareManager = new ShareManager(this);
     }
 
+    initHistoryManager() {
+        this.historyManager = new HistoryManager(this);
+    }
+
     loadCustomSettings() {
         const savedDate = localStorage.getItem('countdownTargetDate');
         const savedEventName = localStorage.getItem('countdownEventName');
@@ -476,6 +480,8 @@ class CountdownTimer {
     }
 
     updateTargetYear() {
+        if (!this.targetDate) return;
+        
         const targetYear = this.targetDate.getFullYear();
         const month = this.targetDate.getMonth() + 1;
         const day = this.targetDate.getDate();
@@ -484,21 +490,16 @@ class CountdownTimer {
         const siteTitleElement = document.getElementById('siteTitle');
         
         if (this.eventName) {
-            titleElement.textContent = `距离${this.eventName}还有`;
-            targetElement.textContent = `${targetYear}年${month}月${day}日`;
-            siteTitleElement.textContent = `🎊 ${this.eventName}倒计时`;
-            document.title = `${this.eventName}倒计时`;
+            if (titleElement) titleElement.textContent = i18nManager.t('countdownTitleEvent', { name: this.eventName });
+            if (targetElement) targetElement.textContent = i18nManager.t('targetDate', { year: targetYear, month: month, day: day });
+            if (siteTitleElement) siteTitleElement.textContent = i18nManager.t('eventSiteTitle', { name: this.eventName });
+            document.title = i18nManager.t('eventSiteTitle', { name: this.eventName }).replace('🎊 ', '');
         } else {
-            titleElement.textContent = '距离新年还有';
-            targetElement.textContent = `${targetYear}年${month}月${day}日`;
-            siteTitleElement.textContent = '🎊 跨年倒计时';
-            document.title = '跨年倒计时 - 迎接新年';
+            if (titleElement) titleElement.textContent = i18nManager.t('countdownTitle');
+            if (targetElement) targetElement.textContent = i18nManager.t('targetDate', { year: targetYear, month: month, day: day });
+            if (siteTitleElement) siteTitleElement.textContent = i18nManager.t('siteTitle');
+            document.title = i18nManager.t('siteTitle');
         }
-    }
-
-    updateCurrentYear() {
-        const currentYear = new Date().getFullYear();
-        document.getElementById('currentYear').textContent = currentYear;
     }
 
     updateYearProgress() {
@@ -517,7 +518,7 @@ class CountdownTimer {
             
             const daysPassed = Math.floor((now - startOfYear) / (1000 * 60 * 60 * 24));
             const totalDays = Math.floor((endOfYear - startOfYear) / (1000 * 60 * 60 * 24));
-            progressText.textContent = `${daysPassed} / ${totalDays} 天`;
+            progressText.textContent = `${daysPassed} / ${totalDays} ${i18nManager.t('days')}`;
         }
     }
 
@@ -565,7 +566,7 @@ class CountdownTimer {
             }
             
             if (secondsLeft <= 10) {
-                title.textContent = `还有 ${secondsLeft} 秒！`;
+                title.textContent = i18nManager.t('secondsLeft', { seconds: secondsLeft });
             }
         } else {
             container.classList.remove('final-countdown', 'critical');
@@ -573,9 +574,9 @@ class CountdownTimer {
             title.classList.remove('urgent-text');
             
             if (this.eventName) {
-                title.textContent = `距离${this.eventName}还有`;
+                title.textContent = i18nManager.t('countdownTitleEvent', { name: this.eventName });
             } else {
-                title.textContent = '距离新年还有';
+                title.textContent = i18nManager.t('countdownTitle');
             }
         }
     }
@@ -622,11 +623,11 @@ class CountdownTimer {
         const celebrationMessage = document.getElementById('celebrationMessage');
         
         if (this.eventName) {
-            celebrationTitle.textContent = `🎉 ${this.eventName}到了！`;
-            celebrationMessage.textContent = `祝您${this.eventName}快乐，万事如意！`;
+            celebrationTitle.textContent = i18nManager.t('celebrationTitleEvent', { name: this.eventName });
+            celebrationMessage.textContent = i18nManager.t('celebrationMessageEvent', { name: this.eventName });
         } else {
-            celebrationTitle.textContent = '🎉 新年快乐！';
-            celebrationMessage.textContent = '祝您新年快乐，万事如意！';
+            celebrationTitle.textContent = i18nManager.t('celebrationTitle');
+            celebrationMessage.textContent = i18nManager.t('celebrationMessage');
         }
         
         countdownContainer.classList.add('hidden');
@@ -1066,8 +1067,72 @@ class CountdownTimer {
         
         this.setupSettingsTabs();
         this.setupThemeSettings();
-
+        this.setupLanguageSwitcher();
         this.setupKeyboardShortcuts();
+    }
+
+    setupLanguageSwitcher() {
+        const languageBtn = document.getElementById('languageBtn');
+        const languageDropdown = document.getElementById('languageDropdown');
+        const langOptions = document.querySelectorAll('.lang-option');
+
+        if (languageBtn && languageDropdown) {
+            languageBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                languageDropdown.classList.toggle('hidden');
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!languageBtn.contains(e.target) && !languageDropdown.contains(e.target)) {
+                    languageDropdown.classList.add('hidden');
+                }
+            });
+
+            langOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    const lang = option.dataset.lang;
+                    if (i18nManager.setLanguage(lang)) {
+                        languageDropdown.classList.add('hidden');
+                        this.updateUILanguage();
+                        this.updateLanguageOption(lang);
+                    }
+                });
+            });
+        }
+
+        this.updateUILanguage();
+        this.updateLanguageOption(i18nManager.getLanguage());
+    }
+
+    updateLanguageOption(currentLang) {
+        const langOptions = document.querySelectorAll('.lang-option');
+        langOptions.forEach(option => {
+            if (option.dataset.lang === currentLang) {
+                option.classList.add('current');
+            } else {
+                option.classList.remove('current');
+            }
+        });
+    }
+
+    updateUILanguage() {
+        i18nManager.updateAllText();
+        this.updateTargetYear();
+        this.updateEventCountdownIndicator();
+    }
+
+    updateEventCountdownIndicator() {
+        const indicator = document.getElementById('eventCountdownIndicator');
+        if (indicator) {
+            const indicatorText = indicator.querySelector('.indicator-text');
+            const exitBtn = indicator.querySelector('#exitEventCountdown');
+            if (indicatorText) {
+                indicatorText.textContent = i18nManager.t('eventCountdownMode');
+            }
+            if (exitBtn) {
+                exitBtn.title = i18nManager.t('returnToOriginal');
+            }
+        }
     }
 
     setupSettingsTabs() {
@@ -1204,10 +1269,18 @@ class CountdownTimer {
                         this.shareManager.openSharePanel();
                     }
                     break;
+                case 'h':
+                    if (this.historyManager) {
+                        this.historyManager.openHistoryPanel();
+                    }
+                    break;
                 case 'escape':
                     this.closeSettings();
                     if (this.shareManager) {
                         this.shareManager.closeSharePanel();
+                    }
+                    if (this.historyManager) {
+                        this.historyManager.closeHistoryPanel();
                     }
                     break;
             }
@@ -1243,12 +1316,12 @@ class CountdownTimer {
         const newEventName = eventNameInput.value.trim();
         
         if (isNaN(newDate.getTime())) {
-            alert('请选择有效的日期');
+            alert(i18nManager.t('invalidDate'));
             return;
         }
         
         if (newDate <= new Date()) {
-            alert('请选择未来的日期');
+            alert(i18nManager.t('pastDate'));
             return;
         }
         
@@ -1335,8 +1408,8 @@ class CountdownTimer {
             indicator.id = 'eventCountdownIndicator';
             indicator.className = 'event-countdown-indicator';
             indicator.innerHTML = `
-                <span class="indicator-text">📅 事件倒计时模式</span>
-                <button id="exitEventCountdown" class="exit-btn" title="返回原倒计时">✕</button>
+                <span class="indicator-text">${i18nManager.t('eventCountdownMode')}</span>
+                <button id="exitEventCountdown" class="exit-btn" title="${i18nManager.t('returnToOriginal')}">✕</button>
             `;
             
             const mainContainer = document.querySelector('main');
@@ -1552,34 +1625,34 @@ class EventManager {
         this.countdownModeEventId = null;
         
         this.categoryLabels = {
-            work: '工作',
-            personal: '个人',
-            study: '学习',
-            health: '健康',
-            social: '社交',
-            birthday: '生日',
-            other: '其他'
+            work: () => i18nManager.t('categoryWork'),
+            personal: () => i18nManager.t('categoryPersonal'),
+            study: () => i18nManager.t('categoryStudy'),
+            health: () => i18nManager.t('categoryHealth'),
+            social: () => i18nManager.t('categorySocial'),
+            birthday: () => i18nManager.t('categoryBirthday'),
+            other: () => i18nManager.t('categoryOther')
         };
         
         this.priorityLabels = {
-            high: '高',
-            medium: '中',
-            low: '低'
+            high: () => i18nManager.t('priorityHigh'),
+            medium: () => i18nManager.t('priorityMedium'),
+            low: () => i18nManager.t('priorityLow')
         };
         
         this.statusLabels = {
-            active: '进行中',
-            completed: '已完成',
-            archived: '已归档'
+            active: () => i18nManager.t('statusActive'),
+            completed: () => i18nManager.t('statusCompleted'),
+            archived: () => i18nManager.t('statusArchived')
         };
         
         this.reminderLabels = {
-            0: '事件开始时',
-            5: '提前5分钟',
-            15: '提前15分钟',
-            30: '提前30分钟',
-            60: '提前1小时',
-            1440: '提前1天'
+            0: () => i18nManager.t('reminderAtEvent'),
+            5: () => i18nManager.t('reminder5min'),
+            15: () => i18nManager.t('reminder15min'),
+            30: () => i18nManager.t('reminder30min'),
+            60: () => i18nManager.t('reminder1hour'),
+            1440: () => i18nManager.t('reminder1day')
         };
         
         this.init();
@@ -1605,6 +1678,26 @@ class EventManager {
 
     saveEvents() {
         localStorage.setItem(this.storageKey, JSON.stringify(this.events));
+    }
+
+    getCategoryLabel(category) {
+        const label = this.categoryLabels[category];
+        return typeof label === 'function' ? label() : label;
+    }
+
+    getPriorityLabel(priority) {
+        const label = this.priorityLabels[priority];
+        return typeof label === 'function' ? label() : label;
+    }
+
+    getStatusLabel(status) {
+        const label = this.statusLabels[status];
+        return typeof label === 'function' ? label() : label;
+    }
+
+    getReminderLabel(minutes) {
+        const label = this.reminderLabels[minutes];
+        return typeof label === 'function' ? label() : label;
     }
 
     requestNotificationPermission() {
@@ -1750,7 +1843,7 @@ class EventManager {
         if (formContainer) formContainer.classList.remove('hidden');
         if (detailContainer) detailContainer.classList.add('hidden');
         if (noEventSelected) noEventSelected.classList.add('hidden');
-        if (formTitle) formTitle.textContent = '添加新事件';
+        if (formTitle) formTitle.textContent = i18nManager.t('addEvent');
         
         const eventDate = document.getElementById('eventDate');
         if (eventDate) {
@@ -1784,7 +1877,7 @@ class EventManager {
         if (formContainer) formContainer.classList.remove('hidden');
         if (detailContainer) detailContainer.classList.add('hidden');
         if (noEventSelected) noEventSelected.classList.add('hidden');
-        if (formTitle) formTitle.textContent = '编辑事件';
+        if (formTitle) formTitle.textContent = i18nManager.t('editEvent');
         
         document.getElementById('eventId').value = event.id;
         document.getElementById('eventTitle').value = event.title;
@@ -1821,7 +1914,7 @@ class EventManager {
         const reminderMinutes = parseInt(document.getElementById('reminderTime').value);
 
         if (!title || !date) {
-            alert('请填写事件名称和日期');
+            alert(i18nManager.t('fillRequired'));
             return;
         }
 
@@ -1875,7 +1968,13 @@ class EventManager {
     deleteSelectedEvent() {
         if (!this.selectedEventId) return;
         
-        if (confirm('确定要删除这个事件吗？')) {
+        const event = this.events.find(e => e.id === this.selectedEventId);
+        
+        if (confirm(i18nManager.t('confirmDelete'))) {
+            if (event && this.countdownTimer.historyManager) {
+                this.countdownTimer.historyManager.recordEventDeletion(event);
+            }
+            
             this.events = this.events.filter(e => e.id !== this.selectedEventId);
             this.saveEvents();
             this.selectedEventId = null;
@@ -1898,11 +1997,16 @@ class EventManager {
         
         const event = this.events.find(e => e.id === this.selectedEventId);
         if (event) {
+            const wasActive = event.status === 'active';
             event.status = event.status === 'completed' ? 'active' : 'completed';
             event.updatedAt = new Date().toISOString();
             this.saveEvents();
             this.renderEventsList();
             this.showEventDetail(event.id);
+            
+            if (event.status === 'completed' && wasActive && this.countdownTimer.historyManager) {
+                this.countdownTimer.historyManager.recordEventCompletion(event);
+            }
         }
     }
 
@@ -1911,11 +2015,16 @@ class EventManager {
         
         const event = this.events.find(e => e.id === this.selectedEventId);
         if (event) {
+            const wasActive = event.status === 'active';
             event.status = event.status === 'archived' ? 'active' : 'archived';
             event.updatedAt = new Date().toISOString();
             this.saveEvents();
             this.renderEventsList();
             this.showEventDetail(event.id);
+            
+            if (event.status === 'archived' && wasActive && this.countdownTimer.historyManager) {
+                this.countdownTimer.historyManager.recordEventArchive(event);
+            }
         }
     }
 
@@ -1953,7 +2062,7 @@ class EventManager {
             eventsList.innerHTML = `
                 <div class="empty-events">
                     <div class="empty-events-icon">📭</div>
-                    <p>暂无事件</p>
+                    <p>${i18nManager.t('noEvents')}</p>
                 </div>
             `;
             return;
@@ -1968,8 +2077,8 @@ class EventManager {
                     <div class="event-item-title">${this.escapeHtml(event.title)}</div>
                     <div class="event-item-date">${dateStr}</div>
                     <div class="event-item-badges">
-                        <span class="event-badge category-${event.category}">${this.categoryLabels[event.category]}</span>
-                        <span class="event-badge priority-${event.priority}">${this.priorityLabels[event.priority]}</span>
+                        <span class="event-badge category-${event.category}">${this.getCategoryLabel(event.category)}</span>
+                        <span class="event-badge priority-${event.priority}">${this.getPriorityLabel(event.priority)}</span>
                     </div>
                 </div>
             `;
@@ -2001,7 +2110,7 @@ class EventManager {
         const year = d.getFullYear();
         const month = String(d.getMonth() + 1).padStart(2, '0');
         const day = String(d.getDate()).padStart(2, '0');
-        const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+        const weekdays = i18nManager.t('weekdays');
         const weekday = weekdays[d.getDay()];
         
         let result = `${year}/${month}/${day} ${weekday}`;
@@ -2049,13 +2158,13 @@ class EventManager {
 
     showReminder(event) {
         if ('Notification' in window && Notification.permission === 'granted') {
-            new Notification('📅 事件提醒', {
+            new Notification(i18nManager.t('notification.eventReminder'), {
                 body: `${event.title}\n${this.formatEventDate(event.date, event.time)}`,
                 icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">📅</text></svg>'
             });
         }
 
-        alert(`📅 事件提醒\n\n${event.title}\n${this.formatEventDate(event.date, event.time)}`);
+        alert(`${i18nManager.t('notification.eventReminder')}\n\n${event.title}\n${this.formatEventDate(event.date, event.time)}`);
     }
 
     toggleCountdownMode() {
@@ -2072,7 +2181,7 @@ class EventManager {
         } else {
             this.countdownModeEventId = this.selectedEventId;
             countdownModeBtn.classList.add('active');
-            countdownModeText.textContent = '退出倒计时';
+            countdownModeText.textContent = i18nManager.t('exitCountdown');
             
             this.countdownTimer.switchToEventCountdown(event);
             
@@ -2093,7 +2202,7 @@ class EventManager {
             countdownModeBtn.classList.remove('active');
         }
         if (countdownModeText) {
-            countdownModeText.textContent = '倒计时模式';
+            countdownModeText.textContent = i18nManager.t('countdownMode');
         }
         
         this.countdownTimer.restoreOriginalCountdown();
@@ -2124,15 +2233,15 @@ class EventManager {
         document.getElementById('detailDateTime').textContent = this.formatEventDate(event.date, event.time);
         
         const categoryEl = document.getElementById('detailCategory');
-        categoryEl.textContent = this.categoryLabels[event.category];
+        categoryEl.textContent = this.getCategoryLabel(event.category);
         categoryEl.className = `event-badge category-${event.category}`;
 
         const priorityEl = document.getElementById('detailPriority');
-        priorityEl.textContent = '优先级: ' + this.priorityLabels[event.priority];
+        priorityEl.textContent = i18nManager.t('eventPriority') + ': ' + this.getPriorityLabel(event.priority);
         priorityEl.className = `event-badge priority-${event.priority}`;
 
         const statusEl = document.getElementById('detailStatus');
-        statusEl.textContent = this.statusLabels[event.status];
+        statusEl.textContent = this.getStatusLabel(event.status);
         statusEl.className = `event-badge status-${event.status}`;
 
         const tagsContainer = document.getElementById('detailTags');
@@ -2157,7 +2266,7 @@ class EventManager {
         const reminderContainer = document.getElementById('detailReminderContainer');
         if (event.reminder && event.reminder.enabled) {
             document.getElementById('detailReminder').textContent = 
-                '提醒: ' + this.reminderLabels[event.reminder.minutesBefore];
+                i18nManager.t('eventReminder') + ': ' + this.getReminderLabel(event.reminder.minutesBefore);
             reminderContainer.classList.remove('hidden');
         } else {
             reminderContainer.classList.add('hidden');
@@ -2167,15 +2276,15 @@ class EventManager {
         const archiveBtn = document.getElementById('archiveEventBtn');
         
         if (event.status === 'completed') {
-            completeBtn.textContent = '↩️ 恢复进行中';
+            completeBtn.textContent = i18nManager.t('restoreActive');
         } else {
-            completeBtn.textContent = '✓ 标记完成';
+            completeBtn.textContent = i18nManager.t('markComplete');
         }
         
         if (event.status === 'archived') {
-            archiveBtn.textContent = '📤 取消归档';
+            archiveBtn.textContent = i18nManager.t('unarchive');
         } else {
-            archiveBtn.textContent = '📦 归档';
+            archiveBtn.textContent = i18nManager.t('archive');
         }
 
         const countdownModeBtn = document.getElementById('countdownModeBtn');
@@ -2183,10 +2292,10 @@ class EventManager {
         
         if (this.countdownModeEventId === eventId) {
             countdownModeBtn.classList.add('active');
-            countdownModeText.textContent = '退出倒计时';
+            countdownModeText.textContent = i18nManager.t('exitCountdown');
         } else {
             countdownModeBtn.classList.remove('active');
-            countdownModeText.textContent = '倒计时模式';
+            countdownModeText.textContent = i18nManager.t('countdownMode');
         }
     }
 }
@@ -2276,7 +2385,7 @@ class ShareManager {
         const minutes = document.getElementById('minutes')?.textContent || '00';
         const seconds = document.getElementById('seconds')?.textContent || '00';
         
-        const eventName = this.countdownTimer.eventName || '跨年倒计时';
+        const eventName = this.countdownTimer.eventName || i18nManager.t('siteTitle').replace('🎊 ', '');
         const targetDate = this.countdownTimer.targetDate;
         
         document.getElementById('shareEventName').textContent = eventName;
@@ -2284,7 +2393,7 @@ class ShareManager {
         document.getElementById('shareHours').textContent = hours;
         document.getElementById('shareMinutes').textContent = minutes;
         document.getElementById('shareTargetDate').textContent = targetDate ? 
-            `目标: ${this.formatDateShort(targetDate)}` : '';
+            `${i18nManager.t('target')}: ${this.formatDateShort(targetDate)}` : '';
         
         const shareUrl = window.location.href;
         const shareUrlInput = document.getElementById('shareUrlInput');
@@ -2294,7 +2403,10 @@ class ShareManager {
         
         const shareText = document.getElementById('shareText');
         if (shareText) {
-            const text = `🎊 ${eventName}\n⏰ 距离目标还有 ${days}天 ${hours}时 ${minutes}分\n📅 ${targetDate ? this.formatDateShort(targetDate) : ''}\n\n来一起倒计时吧！\n${shareUrl}`;
+            const daysLabel = i18nManager.t('days');
+            const hoursLabel = i18nManager.t('hours');
+            const minutesLabel = i18nManager.t('minutes');
+            const text = `🎊 ${eventName}\n⏰ ${i18nManager.t('countdownTitle').replace('还有', '').trim()} ${daysLabel} ${hoursLabel} ${minutesLabel}\n📅 ${targetDate ? this.formatDateShort(targetDate) : ''}\n\n${i18nManager.t('shareTogether')}\n${shareUrl}`;
             shareText.value = text;
         }
     }
@@ -2411,14 +2523,14 @@ class ShareManager {
         const shareUrlInput = document.getElementById('shareUrlInput');
         if (shareUrlInput) {
             navigator.clipboard.writeText(shareUrlInput.value).then(() => {
-                this.showToast('✓ 链接已复制到剪贴板');
+                this.showToast(i18nManager.t('linkCopied'));
                 const copyBtn = document.getElementById('copyShareUrl');
                 if (copyBtn) {
                     copyBtn.classList.add('copied');
-                    copyBtn.textContent = '✓ 已复制';
+                    copyBtn.textContent = i18nManager.t('copied');
                     setTimeout(() => {
                         copyBtn.classList.remove('copied');
-                        copyBtn.textContent = '复制';
+                        copyBtn.textContent = i18nManager.t('copy');
                     }, 2000);
                 }
             }).catch(() => {
@@ -2431,14 +2543,14 @@ class ShareManager {
         const shareText = document.getElementById('shareText');
         if (shareText) {
             navigator.clipboard.writeText(shareText.value).then(() => {
-                this.showToast('✓ 文案已复制到剪贴板');
+                this.showToast(i18nManager.t('textCopied'));
                 const copyBtn = document.getElementById('copyShareText');
                 if (copyBtn) {
                     copyBtn.classList.add('copied');
-                    copyBtn.textContent = '✓ 已复制';
+                    copyBtn.textContent = i18nManager.t('copied');
                     setTimeout(() => {
                         copyBtn.classList.remove('copied');
-                        copyBtn.textContent = '📋 复制文案';
+                        copyBtn.textContent = i18nManager.t('copyText');
                     }, 2000);
                 }
             }).catch(() => {
@@ -2450,24 +2562,27 @@ class ShareManager {
     fallbackCopy(element) {
         element.select();
         document.execCommand('copy');
-        this.showToast('✓ 已复制到剪贴板');
+        this.showToast(i18nManager.t('copiedToClipboard'));
     }
 
     shareToPlatform(platform) {
         const shareUrl = window.location.href;
-        const eventName = this.countdownTimer.eventName || '跨年倒计时';
+        const eventName = this.countdownTimer.eventName || i18nManager.t('siteTitle').replace('🎊 ', '');
         const days = document.getElementById('days')?.textContent || '00';
         const hours = document.getElementById('hours')?.textContent || '00';
         const minutes = document.getElementById('minutes')?.textContent || '00';
         
         const title = `🎊 ${eventName}`;
-        const text = `距离目标还有 ${days}天 ${hours}时 ${minutes}分，来一起倒计时吧！`;
+        const daysLabel = i18nManager.t('days');
+        const hoursLabel = i18nManager.t('hours');
+        const minutesLabel = i18nManager.t('minutes');
+        const text = `${i18nManager.t('countdownTitle')} ${days}${daysLabel} ${hours}${hoursLabel} ${minutes}${minutesLabel}，${i18nManager.t('shareTogether')}！`;
         
         let shareLink = '';
         
         switch (platform) {
             case 'wechat':
-                this.showToast('请截图后分享到微信');
+                this.showToast(i18nManager.t('wechatShareHint'));
                 return;
             case 'weibo':
                 shareLink = `https://service.weibo.com/share/share.php?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(title + ' ' + text)}`;
@@ -2500,6 +2615,408 @@ class ShareManager {
             toast.classList.add('hide');
             setTimeout(() => toast.remove(), 300);
         }, 2000);
+    }
+}
+
+class HistoryManager {
+    constructor(countdownTimer) {
+        this.countdownTimer = countdownTimer;
+        this.history = [];
+        this.storageKey = 'countdownHistory';
+        this.init();
+    }
+
+    getCategoryLabel(category) {
+        return i18nManager.t('category' + category.charAt(0).toUpperCase() + category.slice(1));
+    }
+
+    init() {
+        this.loadHistory();
+        this.setupEventListeners();
+        this.updateYearFilter();
+    }
+
+    loadHistory() {
+        const saved = localStorage.getItem(this.storageKey);
+        if (saved) {
+            try {
+                this.history = JSON.parse(saved);
+            } catch (e) {
+                this.history = [];
+            }
+        }
+    }
+
+    saveHistory() {
+        localStorage.setItem(this.storageKey, JSON.stringify(this.history));
+    }
+
+    addHistoryEntry(event, status) {
+        const entry = {
+            id: this.generateId(),
+            eventId: event.id,
+            title: event.title,
+            category: event.category,
+            priority: event.priority,
+            targetDate: event.date,
+            targetTime: event.time || null,
+            completedAt: new Date().toISOString(),
+            status: status,
+            tags: event.tags || [],
+            description: event.description || ''
+        };
+
+        this.history.unshift(entry);
+        this.saveHistory();
+        return entry;
+    }
+
+    generateId() {
+        return Date.now().toString(36) + Math.random().toString(36).substr(2);
+    }
+
+    setupEventListeners() {
+        const historyBtn = document.getElementById('historyBtn');
+        const historyPanel = document.getElementById('historyPanel');
+        const closeHistory = document.getElementById('closeHistory');
+        const historyFilterType = document.getElementById('historyFilterType');
+        const historyFilterYear = document.getElementById('historyFilterYear');
+
+        if (historyBtn) {
+            historyBtn.addEventListener('click', () => this.openHistoryPanel());
+        }
+
+        if (closeHistory) {
+            closeHistory.addEventListener('click', () => this.closeHistoryPanel());
+        }
+
+        if (historyPanel) {
+            historyPanel.addEventListener('click', (e) => {
+                if (e.target === historyPanel) {
+                    this.closeHistoryPanel();
+                }
+            });
+        }
+
+        if (historyFilterType) {
+            historyFilterType.addEventListener('change', () => this.renderTimeline());
+        }
+
+        if (historyFilterYear) {
+            historyFilterYear.addEventListener('change', () => this.renderTimeline());
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                this.closeHistoryPanel();
+            }
+        });
+    }
+
+    openHistoryPanel() {
+        const historyPanel = document.getElementById('historyPanel');
+        if (historyPanel) {
+            historyPanel.classList.remove('hidden');
+            this.updateYearFilter();
+            this.updateStatistics();
+            this.renderTimeline();
+        }
+    }
+
+    closeHistoryPanel() {
+        const historyPanel = document.getElementById('historyPanel');
+        if (historyPanel) {
+            historyPanel.classList.add('hidden');
+        }
+    }
+
+    updateYearFilter() {
+        const years = new Set();
+        const currentYear = new Date().getFullYear();
+        years.add(currentYear);
+
+        this.history.forEach(entry => {
+            const year = new Date(entry.completedAt).getFullYear();
+            years.add(year);
+        });
+
+        const historyFilterYear = document.getElementById('historyFilterYear');
+        if (historyFilterYear) {
+            const currentValue = historyFilterYear.value;
+            historyFilterYear.innerHTML = `<option value="all">${i18nManager.t('allYears')}</option>`;
+            
+            Array.from(years).sort((a, b) => b - a).forEach(year => {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = `${year}${i18nManager.t('year') || '年'}`;
+                historyFilterYear.appendChild(option);
+            });
+
+            if (currentValue && years.has(parseInt(currentValue))) {
+                historyFilterYear.value = currentValue;
+            }
+        }
+    }
+
+    updateStatistics() {
+        const now = new Date();
+        const currentYear = now.getFullYear();
+        const startOfYear = new Date(currentYear, 0, 1);
+
+        const completedEntries = this.history.filter(e => e.status === 'completed');
+        const archivedEntries = this.history.filter(e => e.status === 'archived');
+        const deletedEntries = this.history.filter(e => e.status === 'deleted');
+
+        document.getElementById('totalCompletedCount').textContent = completedEntries.length;
+        document.getElementById('totalArchivedCount').textContent = archivedEntries.length;
+        document.getElementById('totalDeletedCount').textContent = deletedEntries.length;
+
+        let totalDays = 0;
+        completedEntries.forEach(entry => {
+            const targetDate = new Date(entry.targetDate);
+            const completedDate = new Date(entry.completedAt);
+            const days = Math.ceil((completedDate - targetDate) / (1000 * 60 * 60 * 24));
+            if (days > 0) {
+                totalDays += days;
+            }
+        });
+        document.getElementById('totalDaysCount').textContent = totalDays;
+
+        const streak = this.calculateStreak();
+        document.getElementById('currentStreak').textContent = streak;
+
+        const yearCompleted = completedEntries.filter(e => 
+            new Date(e.completedAt) >= startOfYear
+        ).length;
+        document.getElementById('yearCompletedCount').textContent = yearCompleted;
+
+        const yearCreated = this.history.filter(e => 
+            new Date(e.completedAt) >= startOfYear
+        ).length;
+        document.getElementById('yearCreatedCount').textContent = yearCreated;
+
+        const allYearEntries = this.history.filter(e => 
+            new Date(e.completedAt) >= startOfYear
+        );
+        const completionRate = allYearEntries.length > 0 
+            ? Math.round((yearCompleted / allYearEntries.length) * 100) 
+            : 0;
+        document.getElementById('yearCompletionRate').textContent = `${completionRate}%`;
+
+        this.updateCategoryStats();
+    }
+
+    calculateStreak() {
+        const completedDates = this.history
+            .filter(e => e.status === 'completed')
+            .map(e => {
+                const date = new Date(e.completedAt);
+                return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+            });
+
+        const uniqueDates = [...new Set(completedDates)].sort().reverse();
+        
+        if (uniqueDates.length === 0) return 0;
+
+        let streak = 0;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        for (let i = 0; i < uniqueDates.length; i++) {
+            const [year, month, day] = uniqueDates[i].split('-').map(Number);
+            const checkDate = new Date(year, month, day);
+            const expectedDate = new Date(today);
+            expectedDate.setDate(today.getDate() - i);
+
+            if (checkDate.getTime() === expectedDate.getTime()) {
+                streak++;
+            } else {
+                break;
+            }
+        }
+
+        return streak;
+    }
+
+    updateCategoryStats() {
+        const categoryStats = {};
+        
+        this.history.forEach(entry => {
+            if (!categoryStats[entry.category]) {
+                categoryStats[entry.category] = 0;
+            }
+            categoryStats[entry.category]++;
+        });
+
+        const container = document.getElementById('categoryStats');
+        if (!container) return;
+
+        const total = this.history.length;
+        
+        if (Object.keys(categoryStats).length === 0) {
+            container.innerHTML = `<p class="text-white/40 text-sm">${i18nManager.t('noData')}</p>`;
+            return;
+        }
+
+        container.innerHTML = Object.entries(categoryStats)
+            .sort((a, b) => b[1] - a[1])
+            .map(([category, count]) => {
+                const percentage = total > 0 ? Math.round((count / total) * 100) : 0;
+                return `
+                    <div class="flex items-center gap-2">
+                        <span class="text-white/60 text-sm w-12">${this.getCategoryLabel(category)}</span>
+                        <div class="flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
+                            <div class="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-500" style="width: ${percentage}%"></div>
+                        </div>
+                        <span class="text-white text-sm w-8 text-right">${count}</span>
+                    </div>
+                `;
+            }).join('');
+    }
+
+    getFilteredHistory() {
+        const typeFilter = document.getElementById('historyFilterType')?.value || 'all';
+        const yearFilter = document.getElementById('historyFilterYear')?.value || 'all';
+
+        return this.history.filter(entry => {
+            const matchesType = typeFilter === 'all' || entry.status === typeFilter;
+            
+            let matchesYear = true;
+            if (yearFilter !== 'all') {
+                const entryYear = new Date(entry.completedAt).getFullYear();
+                matchesYear = entryYear === parseInt(yearFilter);
+            }
+
+            return matchesType && matchesYear;
+        });
+    }
+
+    renderTimeline() {
+        const container = document.getElementById('historyTimeline');
+        if (!container) return;
+
+        const filteredHistory = this.getFilteredHistory();
+
+        if (filteredHistory.length === 0) {
+            container.innerHTML = `
+                <div class="empty-history text-center py-12 text-white/50">
+                    <div class="text-5xl mb-4">📭</div>
+                    <p>${i18nManager.t('noHistory')}</p>
+                    <p class="text-sm mt-2">${i18nManager.t('historyHint')}</p>
+                </div>
+            `;
+            return;
+        }
+
+        const groupedByDate = {};
+        filteredHistory.forEach(entry => {
+            const date = new Date(entry.completedAt);
+            const dateKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+            
+            if (!groupedByDate[dateKey]) {
+                groupedByDate[dateKey] = [];
+            }
+            groupedByDate[dateKey].push(entry);
+        });
+
+        container.innerHTML = Object.entries(groupedByDate)
+            .sort((a, b) => new Date(b[0]) - new Date(a[0]))
+            .map(([dateKey, entries]) => {
+                const date = new Date(dateKey);
+                const weekdays = i18nManager.t('weekdays');
+                const dateStr = `${date.getFullYear()}${i18nManager.t('year') || '年'}${date.getMonth() + 1}${i18nManager.t('month') || '月'}${date.getDate()}${i18nManager.t('day') || '日'} ${weekdays[date.getDay()]}`;
+
+                return `
+                    <div class="timeline-group">
+                        <div class="timeline-date text-white/60 text-sm mb-3 flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-gradient-to-r from-purple-500 to-pink-500"></span>
+                            ${dateStr}
+                        </div>
+                        <div class="timeline-entries space-y-2 pl-5 border-l-2 border-white/10">
+                            ${entries.map(entry => this.renderTimelineEntry(entry)).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+    }
+
+    renderTimelineEntry(entry) {
+        let statusIcon, statusText, statusClass;
+        
+        switch(entry.status) {
+            case 'completed':
+                statusIcon = '✅';
+                statusText = i18nManager.t('completed');
+                statusClass = 'text-green-400';
+                break;
+            case 'archived':
+                statusIcon = '📦';
+                statusText = i18nManager.t('archived');
+                statusClass = 'text-blue-400';
+                break;
+            case 'deleted':
+                statusIcon = '🗑️';
+                statusText = i18nManager.t('deleted');
+                statusClass = 'text-red-400';
+                break;
+            default:
+                statusIcon = '📋';
+                statusText = 'Unknown';
+                statusClass = 'text-gray-400';
+        }
+        
+        const completedTime = new Date(entry.completedAt);
+        const timeStr = `${String(completedTime.getHours()).padStart(2, '0')}:${String(completedTime.getMinutes()).padStart(2, '0')}`;
+
+        return `
+            <div class="timeline-entry bg-white/5 rounded-lg p-3 border border-white/10 hover:bg-white/10 transition-colors" data-status="${entry.status}">
+                <div class="flex items-start justify-between">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span>${statusIcon}</span>
+                            <span class="text-white font-medium timeline-entry-title">${this.escapeHtml(entry.title)}</span>
+                            <span class="text-xs px-2 py-0.5 rounded-full bg-white/10 ${statusClass}">${statusText}</span>
+                        </div>
+                        <div class="flex items-center gap-3 text-xs text-white/50">
+                            <span>📁 ${this.getCategoryLabel(entry.category)}</span>
+                            <span>🎯 ${i18nManager.t('target')}: ${this.formatDateShort(entry.targetDate)}</span>
+                            <span>⏰ ${timeStr}</span>
+                        </div>
+                        ${entry.tags && entry.tags.length > 0 ? `
+                            <div class="flex gap-1 mt-2">
+                                ${entry.tags.map(tag => `<span class="text-xs px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300">${this.escapeHtml(tag)}</span>`).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    formatDateShort(dateStr) {
+        const d = new Date(dateStr);
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${year}/${month}/${day}`;
+    }
+
+    escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    recordEventCompletion(event) {
+        return this.addHistoryEntry(event, 'completed');
+    }
+
+    recordEventArchive(event) {
+        return this.addHistoryEntry(event, 'archived');
+    }
+
+    recordEventDeletion(event) {
+        return this.addHistoryEntry(event, 'deleted');
     }
 }
 
