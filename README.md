@@ -104,33 +104,6 @@ countdown/
 - ✅ 平板 (768px)
 - ✅ 手机 (375px)
 
-## 🔧 自定义配置
-
-### 修改音乐播放器
-
-在 `index.html` 中修改歌单 ID：
-
-```html
-<div id="xf-MusicPlayer" 
-     data-cdnName="https://player.xfyun.club/js" 
-     data-songList="你的歌单ID" 
-     data-fadeOutAutoplay>
-</div>
-```
-
-### 添加新主题
-
-在 `style.css` 中添加：
-
-```css
-.theme-custom {
-    --primary-color: #your-color;
-    --secondary-color: #your-color;
-    --bg-gradient-start: #your-color;
-    --bg-gradient-end: #your-color;
-}
-```
-
 ### 修改默认语言
 
 在 `i18n.js` 中修改：
@@ -168,10 +141,6 @@ this.currentLanguage = 'zh-CN'; // 默认语言
 - 🎨 优化主题系统
 - 🎨 优化粒子动画效果
 - 🐛 修复已知问题
-
-## 📄 许可证
-
-本项目可自由使用和修改。
 
 ## 👨‍💻 作者
 
