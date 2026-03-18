@@ -1073,18 +1073,32 @@ class CountdownTimer {
 
     setupLanguageSwitcher() {
         const languageBtn = document.getElementById('languageBtn');
-        const languageDropdown = document.getElementById('languageDropdown');
+        const languagePanel = document.getElementById('languagePanel');
+        const closeLanguage = document.getElementById('closeLanguage');
+        const cancelLanguage = document.getElementById('cancelLanguage');
         const langOptions = document.querySelectorAll('.lang-option');
 
-        if (languageBtn && languageDropdown) {
+        if (languageBtn && languagePanel) {
             languageBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                languageDropdown.classList.toggle('hidden');
+                languagePanel.classList.remove('hidden');
             });
 
-            document.addEventListener('click', (e) => {
-                if (!languageBtn.contains(e.target) && !languageDropdown.contains(e.target)) {
-                    languageDropdown.classList.add('hidden');
+            if (closeLanguage) {
+                closeLanguage.addEventListener('click', () => {
+                    languagePanel.classList.add('hidden');
+                });
+            }
+
+            if (cancelLanguage) {
+                cancelLanguage.addEventListener('click', () => {
+                    languagePanel.classList.add('hidden');
+                });
+            }
+
+            languagePanel.addEventListener('click', (e) => {
+                if (e.target === languagePanel) {
+                    languagePanel.classList.add('hidden');
                 }
             });
 
@@ -1092,7 +1106,7 @@ class CountdownTimer {
                 option.addEventListener('click', () => {
                     const lang = option.dataset.lang;
                     if (i18nManager.setLanguage(lang)) {
-                        languageDropdown.classList.add('hidden');
+                        languagePanel.classList.add('hidden');
                         this.updateUILanguage();
                         this.updateLanguageOption(lang);
                     }
@@ -1107,10 +1121,13 @@ class CountdownTimer {
     updateLanguageOption(currentLang) {
         const langOptions = document.querySelectorAll('.lang-option');
         langOptions.forEach(option => {
+            const checkIcon = option.querySelector('.check-icon');
             if (option.dataset.lang === currentLang) {
-                option.classList.add('current');
+                option.classList.add('bg-white/10', 'border-white/30');
+                if (checkIcon) checkIcon.classList.remove('hidden');
             } else {
-                option.classList.remove('current');
+                option.classList.remove('bg-white/10', 'border-white/30');
+                if (checkIcon) checkIcon.classList.add('hidden');
             }
         });
     }

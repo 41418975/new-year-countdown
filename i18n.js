@@ -222,7 +222,8 @@ const i18n = {
             countdownComplete: '🎉 倒计时完成！'
         },
         
-        language: '语言'
+        language: '语言',
+        selectLanguage: '🌐 选择语言'
     },
     
     'en-US': {
@@ -446,7 +447,8 @@ const i18n = {
             countdownComplete: '🎉 Countdown Complete!'
         },
         
-        language: 'Language'
+        language: 'Language',
+        selectLanguage: '🌐 Select Language'
     },
     
     'ja-JP': {
@@ -670,7 +672,8 @@ const i18n = {
             countdownComplete: '🎉 カウントダウン完了！'
         },
         
-        language: '言語'
+        language: '言語',
+        selectLanguage: '🌐 言語を選択'
     },
     
     'ko-KR': {
@@ -894,7 +897,8 @@ const i18n = {
             countdownComplete: '🎉 카운트다운 완료!'
         },
         
-        language: '언어'
+        language: '언어',
+        selectLanguage: '🌐 언어 선택'
     }
 };
 

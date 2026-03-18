@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="跨年倒计时网站 - 精美的新年倒计时，支持自定义事件、主题切换、粒子特效">
     <meta name="keywords" content="倒计时,新年倒计时,跨年,倒计时网站,事件管理">
@@ -24,8 +24,8 @@
 <body class="min-h-screen overflow-x-hidden">
     <canvas id="particleCanvas" class="fixed top-0 left-0 w-full h-full z-0"></canvas>
     
-    <div class="relative z-10 min-h-screen flex flex-col">
-        <header class="py-6 px-4">
+    <div class="relative z-10 h-full flex flex-col">
+        <header class="py-4 px-4">
             <div class="max-w-6xl mx-auto flex justify-between items-center">
                 <h1 class="text-2xl md:text-3xl font-bold text-white drop-shadow-lg" id="siteTitle">
                     🎊 跨年倒计时
@@ -47,27 +47,11 @@
                         <button id="languageBtn" class="bg-white/20 hover:bg-white/30 text-white w-10 h-10 rounded-full font-semibold transition-all duration-300 hover:scale-105 border border-white/30 flex items-center justify-center" title="语言 / Language" data-i18n-title="language">
                             🌐
                         </button>
-                        <div id="languageDropdown" class="hidden absolute right-0 top-12 bg-white/10 backdrop-blur-xl rounded-xl border border-white/20 shadow-2xl overflow-hidden min-w-[140px] z-50">
-                            <div class="p-2 space-y-1">
-                                <button class="lang-option w-full text-left px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-white text-sm flex items-center gap-2" data-lang="zh-CN">
-                                    <span>🇨🇳</span> 简体中文
-                                </button>
-                                <button class="lang-option w-full text-left px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-white text-sm flex items-center gap-2" data-lang="en-US">
-                                    <span>🇺🇸</span> English
-                                </button>
-                                <button class="lang-option w-full text-left px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-white text-sm flex items-center gap-2" data-lang="ja-JP">
-                                    <span>🇯🇵</span> 日本語
-                                </button>
-                                <button class="lang-option w-full text-left px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-white text-sm flex items-center gap-2" data-lang="ko-KR">
-                                    <span>🇰🇷</span> 한국어
-                                </button>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
         </header>
-        <main class="flex-grow flex items-center justify-center px-4 py-8">
+        <main class="flex-grow flex items-center justify-center px-4 py-4 overflow-hidden">
             <div class="text-center max-w-4xl mx-auto">
                 <div class="mb-8">
                     <h2 class="text-xl md:text-2xl text-white/90 mb-2" id="countdownTitle" data-i18n="countdownTitle">距离新年还有</h2>
@@ -277,6 +261,45 @@
                                     应用主题设置
                                 </button>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 语言选择弹窗 -->
+                <div id="languagePanel" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+                    <div class="bg-white/10 backdrop-blur-xl rounded-2xl p-6 md:p-8 border border-white/20 max-w-sm w-full mx-4 shadow-2xl">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-xl font-bold text-white" data-i18n="selectLanguage">🌐 选择语言</h3>
+                            <button id="closeLanguage" class="text-white/70 hover:text-white text-2xl transition-colors">&times;</button>
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <button class="lang-option w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 transition-colors text-white flex items-center gap-3 border border-white/10" data-lang="zh-CN">
+                                <span class="text-xl">🇨🇳</span>
+                                <span>简体中文</span>
+                                <span class="ml-auto check-icon hidden text-green-400">✓</span>
+                            </button>
+                            <button class="lang-option w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 transition-colors text-white flex items-center gap-3 border border-white/10" data-lang="en-US">
+                                <span class="text-xl">🇺🇸</span>
+                                <span>English</span>
+                                <span class="ml-auto check-icon hidden text-green-400">✓</span>
+                            </button>
+                            <button class="lang-option w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 transition-colors text-white flex items-center gap-3 border border-white/10" data-lang="ja-JP">
+                                <span class="text-xl">🇯🇵</span>
+                                <span>日本語</span>
+                                <span class="ml-auto check-icon hidden text-green-400">✓</span>
+                            </button>
+                            <button class="lang-option w-full text-left px-4 py-3 rounded-xl hover:bg-white/10 transition-colors text-white flex items-center gap-3 border border-white/10" data-lang="ko-KR">
+                                <span class="text-xl">🇰🇷</span>
+                                <span>한국어</span>
+                                <span class="ml-auto check-icon hidden text-green-400">✓</span>
+                            </button>
+                        </div>
+                        
+                        <div class="mt-6">
+                            <button id="cancelLanguage" class="w-full bg-white/10 hover:bg-white/20 text-white px-4 py-3 rounded-lg font-medium transition-all border border-white/20" data-i18n="cancel">
+                                取消
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -641,7 +664,7 @@
             </div>
         </div>
 
-        <footer class="py-6 px-4 text-center">
+        <footer class="py-6 px-4 text-center mt-auto">
             <p class="text-white/60 text-sm" id="footerText">
                 <span data-i18n="footer">© 跨年倒计时 | 用爱与希望迎接新的一年 晚梦出品必属精品</span>
             </p>
