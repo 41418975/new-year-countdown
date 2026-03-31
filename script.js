@@ -53,6 +53,16 @@ class CountdownTimer {
             skipFrames: 0
         };
         
+        this.rippleConfig = {
+            duration: 800,
+            rippleCount: 1,
+            effect: 'gradient',
+            scale: 4,
+            startOpacity: 0.9,
+            midOpacity: 0.5,
+            staggerDelay: 100
+        };
+        
         this.particlePool = [];
         this.burstPool = [];
         this.fireworkPool = [];
@@ -2440,8 +2450,11 @@ class ShareManager {
         const canvas = document.getElementById('qrcodeCanvas');
         if (!canvas) return;
         
-        const ctx = canvas.getContext('2d');
         const size = 150;
+        canvas.width = size;
+        canvas.height = size;
+        
+        const ctx = canvas.getContext('2d');
         const url = window.location.href;
         
         ctx.fillStyle = '#ffffff';
